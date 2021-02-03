@@ -56,6 +56,13 @@
 // Eigen INCLUDES
 //=============================================================================================================
 
+//=============================================================================================================
+// FORWARD DECLARATIONS
+//=============================================================================================================
+
+namespace RTPROCESSINGLIB {
+    class EventList;
+}
 
 //=============================================================================================================
 // DEFINE NAMESPACE ANSHAREDLIB
@@ -727,6 +734,8 @@ private:
     QStack<QListWidgetItem*>            m_dataStoredGroups;             /**< Stores the groups for switching between files */
 
     QSharedPointer<FiffRawViewModel>    m_pFiffModel;                   /**< Pointer to FiffRawViewModel associated with the events stored in this model */
+
+    QSharedPointer<RTPROCESSINGLIB::EventList>      m_pEvents;
 };
 
 //=============================================================================================================

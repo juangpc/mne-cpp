@@ -73,6 +73,12 @@ using namespace Eigen;
 using namespace RTPROCESSINGLIB;
 
 //=============================================================================================================
+// DEFINE STATIC MEMBERS
+//=============================================================================================================
+
+RTPROCESSINGLIB::EventList RtFiffRawView::m_EventList;
+
+//=============================================================================================================
 // DEFINE MEMBER METHODS
 //=============================================================================================================
 
@@ -740,6 +746,6 @@ void RtFiffRawView::onAddEventMarker()
     if (dSample > m_pModel->getCurrentSampleIndex()){
         iAbsoluteSample -= m_pModel->getMaxSamples();
     }
-
-    m_pEventList->addEvent(Event(iAbsoluteSample));
+    m_EventList.addEvent(Event(iAbsoluteSample));
+//    m_pEventList->addEvent(Event(iAbsoluteSample));
 }

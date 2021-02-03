@@ -398,6 +398,8 @@ public:
      */
     float getSamplingFreq() const;
 
+    static RTPROCESSINGLIB::EventList           m_EventList;
+
 protected:
     //=========================================================================================================
     /**

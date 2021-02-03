@@ -160,7 +160,7 @@ public:
     Event getEvent(int iIndex) const;
 
 private:
-    static QList<Event>     m_lEvents;          /**< List of events */
+    QList<Event>     m_lEvents;          /**< List of events */
 };
 }//namespace
 

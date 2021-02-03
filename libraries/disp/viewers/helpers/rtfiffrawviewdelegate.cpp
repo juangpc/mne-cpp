@@ -659,9 +659,11 @@ void RtFiffRawViewDelegate::createMarkerPath(const QModelIndex &index,
     float yStart = option.rect.topLeft().y();
     float yEnd = option.rect.bottomRight().y();
 
-    for(int i = 0; i < m_pEventList->getNumberOfEvents(); i++)
+
+
+    for(int i = 0; i < RtFiffRawView::m_EventList.getNumberOfEvents(); i++)
     {
-        int iEventSample = m_pEventList->getEvent(i).getSample();
+        int iEventSample = RtFiffRawView::m_EventList.getEvent(i).getSample();
         int iEarliestDrawnSample = iOffset - iMaxSample + iCurrentSample;
         int iLatestDrawnSample = iOffset + iMaxSample;
 
