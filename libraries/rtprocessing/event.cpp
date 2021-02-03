@@ -98,7 +98,7 @@ int Event::getType() const
 
 //=============================================================================================================
 
-int Event::setType(int iType)
+void Event::setType(int iType)
 {
     m_iType = iType;
 }

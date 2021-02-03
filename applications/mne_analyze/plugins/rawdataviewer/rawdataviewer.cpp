@@ -146,7 +146,7 @@ QWidget *RawDataViewer::getView()
 
 //=============================================================================================================
 
-void RawDataViewer::handleEvent(QSharedPointer<Event> e)
+void RawDataViewer::handleEvent(QSharedPointer<ANSHAREDLIB::Event> e)
 {
     switch (e->getType()) {
     case EVENT_TYPE::TRIGGER_REDRAW:

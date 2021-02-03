@@ -168,7 +168,7 @@ QWidget *AnnotationManager::getView()
 
 //=============================================================================================================
 
-void AnnotationManager::handleEvent(QSharedPointer<Event> e)
+void AnnotationManager::handleEvent(QSharedPointer<ANSHAREDLIB::Event> e)
 {
     switch (e->getType()) {
     case EVENT_TYPE::NEW_ANNOTATION_ADDED:

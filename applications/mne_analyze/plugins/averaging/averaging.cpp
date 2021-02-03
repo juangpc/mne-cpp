@@ -245,7 +245,7 @@ QDockWidget* Averaging::getControl()
 
 //=============================================================================================================
 
-void Averaging::handleEvent(QSharedPointer<Event> e)
+void Averaging::handleEvent(QSharedPointer<ANSHAREDLIB::Event> e)
 {
     switch (e->getType()) {
         case EVENT_TYPE::SELECTED_MODEL_CHANGED:
