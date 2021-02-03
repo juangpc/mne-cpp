@@ -143,11 +143,11 @@ public:
 
     //=========================================================================================================
     /**
-     * Get number of events in static event list (total events added)
+     * Get number of events in event list
      *
-     * @return number of events in static event list
+     * @return number of events in event list
      */
-    int getNumberOfEvents() const;
+    int size() const;
 
     //=========================================================================================================
     /**
@@ -158,6 +158,12 @@ public:
      * @return  event at iIndex
      */
     Event getEvent(int iIndex) const;
+
+    //=========================================================================================================
+    bool isEmpty() const;
+
+    //=========================================================================================================
+    void insert(int iIndex, const Event& event);
 
 private:
     QList<Event>     m_lEvents;          /**< List of events */

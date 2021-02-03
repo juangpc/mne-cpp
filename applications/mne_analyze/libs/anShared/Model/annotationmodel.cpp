@@ -42,6 +42,7 @@
 #include <mne/mne.h>
 #include <iomanip>
 #include <iostream>
+#include <rtprocessing/event.h>
 
 //=============================================================================================================
 // QT INCLUDES
@@ -65,6 +66,7 @@
 //=============================================================================================================
 
 using namespace ANSHAREDLIB;
+using namespace RTPROCESSINGLIB;
 
 //=============================================================================================================
 // DEFINE GLOBAL METHODS
@@ -166,16 +168,17 @@ bool AnnotationModel::insertRows(int position,
         return false;
     }
 
-    if(m_dataSamples.isEmpty()) {
+    if(m_dataSamples.isEmpty() && m_pEvents->isEmpty()) {
         m_dataSamples.insert(0, m_iSamplePos);
         m_dataTypes.insert(0, m_iType);
         m_dataIsUserEvent.insert(0, 1);
         m_dataGroup.insert(0, m_iSelectedGroup);
+        m_pEvents->addEvent(Event(m_iSamplePos, m_iType, m_iSelectedGroup));
     }
     else {
         for (int i = 0; i < span; ++i) {
-            for(int t = 0; t<m_dataSamples.size(); t++) {
-                if(m_dataSamples[t] >= m_iSamplePos) {
+            for(int t = 0; t < m_pEvents->size(); t++) {
+                if(m_pEvents->getEvent(t).getSample() >= m_iSamplePos) {
                     m_dataSamples.insert(t, m_iSamplePos);
 
                     if(m_sFilterEventType == "All")

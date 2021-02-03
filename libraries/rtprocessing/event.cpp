@@ -105,7 +105,7 @@ void EventList::addEvent(const Event& event)
 
 //=============================================================================================================
 
-int EventList::getNumberOfEvents() const
+int EventList::size() const
 {
     return m_lEvents.size();
 }
@@ -122,4 +122,18 @@ Event EventList::getEvent(int iIndex) const
 void EventList::clear()
 {
     m_lEvents.clear();
+}
+
+//=============================================================================================================
+
+bool EventList::isEmpty() const
+{
+    return m_lEvents.isEmpty();
+}
+
+//=============================================================================================================
+
+void EventList::insert(int iIndex, const Event &event)
+{
+    m_lEvents.insert(iIndex, event);
 }
