@@ -338,6 +338,7 @@ bool AnnotationModel::setData(const QModelIndex &index,
 void AnnotationModel::setEventFilterType(const QString eventType)
 {
     m_sFilterEventType = eventType;
+    m_iLastTypeAdded = m_sFilterEventType.toInt();
 
     updateEventFilter();
 }
@@ -346,12 +347,6 @@ void AnnotationModel::setEventFilterType(const QString eventType)
 
 void AnnotationModel::updateEventFilter()
 {
-    //Clear filtered event data
-    m_dataSamplesFiltered.clear();
-    m_dataTypesFiltered.clear();
-    m_dataIsUserEventFiltered.clear();
-    m_dataGroupFiltered.clear();
-
     m_eventListFiltered.clear();
 
     //Fill filtered event data depending on the user defined event filter type
@@ -364,7 +359,14 @@ void AnnotationModel::updateEventFilter()
                 m_eventListFiltered.append(m_eventList[i]);
             }
         }
-        m_iLastTypeAdded = m_sFilterEventType.toInt();
+    }
+
+    for(int i = 0; i < m_eventList.size(); i++) {
+        if(m_eventList[i].getGroup() == m_iSelectedGroup || m_iSelectedGroup == ALLGROUPS){
+            if(m_eventList[i].getType() == m_sFilterEventType.toInt() || m_sFilterEventType == "All") {
+                m_eventListFiltered.append(m_eventList[i]);
+            }
+        }
     }
 
     emit dataChanged(createIndex(0,0), createIndex(m_eventListFiltered.size(), 0));
