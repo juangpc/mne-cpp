@@ -96,12 +96,18 @@ public:
     int getSample() const;
 
     //=========================================================================================================
+    void setSample(int iSample);
+
+    //=========================================================================================================
     /**
      * Returns event type
      *
      * @return event type
      */
     int getType() const;
+
+    //=========================================================================================================
+    int setType(int iType);
 
     //=========================================================================================================
     /**
@@ -111,10 +117,8 @@ public:
      */
     int getGroup() const;
 
-    bool operator<(const Event& rhs) const
-    {
-       return getSample() < rhs.getSample();
-    }
+    bool operator<(const Event& rhs) const;
+
 private:
     int         m_iSample;              /**< Sample coorespodning to this event */
     int         m_iType;                /**< Type of the event */
@@ -157,13 +161,16 @@ public:
      *
      * @return  event at iIndex
      */
-    Event getEvent(int iIndex) const;
+    const Event& at(int iIndex) const;
 
     //=========================================================================================================
     bool isEmpty() const;
 
     //=========================================================================================================
     void insert(int iIndex, const Event& event);
+
+    Event& operator[](int i);
+    const Event& operator[](int i) const;
 
 private:
     QList<Event>     m_lEvents;          /**< List of events */

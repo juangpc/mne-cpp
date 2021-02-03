@@ -84,9 +84,23 @@ int Event::getSample() const
 
 //=============================================================================================================
 
+void Event::setSample(int iSample)
+{
+    m_iSample = iSample;
+}
+
+//=============================================================================================================
+
 int Event::getType() const
 {
     return m_iType;
+}
+
+//=============================================================================================================
+
+int Event::setType(int iType)
+{
+    m_iType = iType;
 }
 
 //=============================================================================================================
@@ -98,9 +112,18 @@ int Event::getGroup() const
 
 //=============================================================================================================
 
+bool Event::operator<(const Event& rhs) const
+{
+   return m_iSample < rhs.getSample();
+}
+
+//=============================================================================================================
+
 void EventList::addEvent(const Event& event)
 {
     m_lEvents.append(event);
+
+    std::sort(m_lEvents.begin(), m_lEvents.end());
 }
 
 //=============================================================================================================
@@ -112,7 +135,7 @@ int EventList::size() const
 
 //=============================================================================================================
 
-Event EventList::getEvent(int iIndex) const
+const Event& EventList::at(int iIndex) const
 {
     return m_lEvents.at(iIndex);
 }
@@ -136,4 +159,18 @@ bool EventList::isEmpty() const
 void EventList::insert(int iIndex, const Event &event)
 {
     m_lEvents.insert(iIndex, event);
+}
+
+//=============================================================================================================
+
+Event& EventList::operator[](int i)
+{
+    return m_lEvents[i];
+}
+
+//=============================================================================================================
+
+const Event& EventList::operator[](int i) const
+{
+    return m_lEvents.at(i);
 }
