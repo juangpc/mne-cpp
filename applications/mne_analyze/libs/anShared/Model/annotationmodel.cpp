@@ -177,7 +177,7 @@ bool AnnotationModel::insertRows(int position,
     endInsertRows();
 
     //Update filtered event data
-    setEventFilterType(m_sFilterEventType);
+    updateEventFilter();
 
     return true;
 }
@@ -328,7 +328,7 @@ bool AnnotationModel::setData(const QModelIndex &index,
     }
 
     //Update filtered event data
-    setEventFilterType(m_sFilterEventType);
+    updateEventFilter();
 
     return true;
 }
@@ -339,6 +339,13 @@ void AnnotationModel::setEventFilterType(const QString eventType)
 {
     m_sFilterEventType = eventType;
 
+    updateEventFilter();
+}
+
+//=============================================================================================================
+
+void AnnotationModel::updateEventFilter()
+{
     //Clear filtered event data
     m_dataSamplesFiltered.clear();
     m_dataTypesFiltered.clear();
@@ -346,7 +353,7 @@ void AnnotationModel::setEventFilterType(const QString eventType)
     m_dataGroupFiltered.clear();
 
     //Fill filtered event data depending on the user defined event filter type
-    if(eventType == "All") {
+    if(m_sFilterEventType == "All") {
         m_dataSamplesFiltered = m_dataSamples;
         m_dataTypesFiltered = m_dataTypes;
         m_dataIsUserEventFiltered = m_dataIsUserEvent;
@@ -354,14 +361,14 @@ void AnnotationModel::setEventFilterType(const QString eventType)
     }
     else {
         for(int i = 0; i<m_dataSamples.size(); i++) {
-            if(m_dataTypes[i] == eventType.toInt()) {
+            if(m_dataTypes[i] == m_sFilterEventType.toInt()) {
                 m_dataSamplesFiltered.append(m_dataSamples[i]);
                 m_dataTypesFiltered.append(m_dataTypes[i]);
                 m_dataIsUserEventFiltered.append(m_dataIsUserEvent[i]);
                 m_dataGroupFiltered.append(m_dataGroup[i]);
             }
         }
-        m_iLastTypeAdded = eventType.toInt();
+        m_iLastTypeAdded = m_sFilterEventType.toInt();
     }
 
     emit dataChanged(createIndex(0,0), createIndex(m_dataSamplesFiltered.size(), 0));
@@ -429,7 +436,7 @@ bool AnnotationModel::removeRows(int position,
     endRemoveRows();
 
     //Update filtered event data
-    setEventFilterType(m_sFilterEventType);
+    updateEventFilter();
 
     return true;
 }
@@ -533,21 +540,21 @@ void AnnotationModel::setShowSelected(int iSelectedState)
 
 //=============================================================================================================
 
-int AnnotationModel::getShowSelected()
+int AnnotationModel::getShowSelected() const
 {
     return m_iSelectedCheckState;
 }
 
 //=============================================================================================================
 
-int AnnotationModel::getSelectedAnn()
+int AnnotationModel::getSelectedAnn() const
 {
     return m_iSelectedAnn;
 }
 
 //=============================================================================================================
 
-float AnnotationModel::getFreq()
+float AnnotationModel::getFreq() const
 {
     return m_fFreq;
 }
@@ -848,7 +855,7 @@ QListWidgetItem* AnnotationModel::popGroup()
 
 //=============================================================================================================
 
-int AnnotationModel::getGroupStackSize()
+int AnnotationModel::getGroupStackSize() const
 {
     return m_dataStoredGroups.size();
 }
@@ -871,7 +878,7 @@ void AnnotationModel::setGroupName(int iGroupIndex,
 
 //=============================================================================================================
 
-QString AnnotationModel::getGroupName(int iMapKey)
+QString AnnotationModel::getGroupName(int iMapKey) const
 {
     if(!m_mAnnotationHub.contains(iMapKey)){
         qWarning() << "[AnnotationModel::getGroupName] Attempting to get name of group with invalid key.";
@@ -883,7 +890,7 @@ QString AnnotationModel::getGroupName(int iMapKey)
 
 //=============================================================================================================
 
-QString AnnotationModel::getGroupNameFromList(int iListIndex)
+QString AnnotationModel::getGroupNameFromList(int iListIndex) const
 {
     if(m_mAnnotationHub.keys().size() <= iListIndex){
         qWarning() << "[AnnotationModel::getGroupNameFromList] Attempting to get name of group with invalid key.";
@@ -1013,5 +1020,5 @@ void AnnotationModel::applyOffset(int iFirstSampleOffset)
     }
 
     //Update data to be diplayed
-    setEventFilterType(m_sFilterEventType);
+    updateEventFilter();
 }

@@ -245,11 +245,14 @@ public:
 
     //=========================================================================================================
     /**
-     * Sets current filter setting sto only display selected annotation type
+     * Sets current filter settings and triggers update
      *
      * @param [in] eventType    Type of annotation that is to be displayed when filterd
      */
     void setEventFilterType(const QString eventType);
+
+    //=========================================================================================================
+    void updateEventFilter();
 
     //=========================================================================================================
     /**
@@ -343,7 +346,7 @@ public:
      *
      * @return Returns stored selected annotation
      */
-    int getSelectedAnn();
+    int getSelectedAnn() const;
 
     //=========================================================================================================
     /**
@@ -359,7 +362,7 @@ public:
      *
      * @return whther to show selected annotations
      */
-    int getShowSelected();
+    int getShowSelected() const;
 
     //=========================================================================================================
     /**
@@ -367,7 +370,7 @@ public:
      *
      * @return sample frequency
      */
-    float getFreq();
+    float getFreq() const;
 
     //=========================================================================================================
     /**
@@ -554,7 +557,7 @@ public:
      *
      * @return size of member stack m_dataStoredGroups
      */
-    int getGroupStackSize();
+    int getGroupStackSize() const;
 
     //=========================================================================================================
     /**
@@ -590,7 +593,7 @@ public:
      *
      * @return name of group at from m_mAnnotationHub at iMapKey
      */
-    QString getGroupName(int iMapKey);
+    QString getGroupName(int iMapKey)const;
 
     //=========================================================================================================
     /**
@@ -600,7 +603,7 @@ public:
      *
      * @return name of the iListIndex-th event group for m_mAnnotationHub
      */
-    QString getGroupNameFromList(int iListIndex);
+    QString getGroupNameFromList(int iListIndex) const;
 
     //=========================================================================================================
     /**
