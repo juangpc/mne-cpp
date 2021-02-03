@@ -43,6 +43,7 @@
 #include "../anshared_global.h"
 #include "../Utils/types.h"
 #include "abstractmodel.h"
+#include <rtprocessing/event.h>
 
 //=============================================================================================================
 // QT INCLUDES
@@ -735,8 +736,8 @@ private:
 
     QSharedPointer<FiffRawViewModel>    m_pFiffModel;                   /**< Pointer to FiffRawViewModel associated with the events stored in this model */
 
-    QSharedPointer<RTPROCESSINGLIB::EventList>      m_pEvents;
-    QSharedPointer<RTPROCESSINGLIB::EventList>      m_pEventsFiltered;
+    RTPROCESSINGLIB::EventList          m_pEvents;
+    RTPROCESSINGLIB::EventList          m_pEventsFiltered;
 };
 
 //=============================================================================================================

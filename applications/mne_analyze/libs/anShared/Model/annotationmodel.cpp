@@ -42,7 +42,6 @@
 #include <mne/mne.h>
 #include <iomanip>
 #include <iostream>
-#include <rtprocessing/event.h>
 
 //=============================================================================================================
 // QT INCLUDES
@@ -168,46 +167,12 @@ bool AnnotationModel::insertRows(int position,
         return false;
     }
 
-    if(m_dataSamples.isEmpty() && m_pEvents->isEmpty()) {
-        m_dataSamples.insert(0, m_iSamplePos);
-        m_dataTypes.insert(0, m_iType);
-        m_dataIsUserEvent.insert(0, 1);
-        m_dataGroup.insert(0, m_iSelectedGroup);
-        m_pEvents->addEvent(Event(m_iSamplePos, m_iType, m_iSelectedGroup));
-    }
-    else {
-        for (int i = 0; i < span; ++i) {
-            for(int t = 0; t < m_pEvents->size(); t++) {
-                if(m_pEvents->getEvent(t).getSample() >= m_iSamplePos) {
-                    m_dataSamples.insert(t, m_iSamplePos);
-
-                    if(m_sFilterEventType == "All")
-                        m_dataTypes.insert(t, m_iType);
-                    else
-                        m_dataTypes.insert(t, m_sFilterEventType.toInt());
-
-                    m_dataIsUserEvent.insert(t, 1);
-                    m_dataGroup.insert(t, m_iSelectedGroup);
-                    break;
-                }
-
-                if(t == m_dataSamples.size()-1) {
-                    m_dataSamples.append(m_iSamplePos);
-
-                    if(m_sFilterEventType == "All")
-                        m_dataTypes.append(m_iType);
-                    else
-                        m_dataTypes.append(m_sFilterEventType.toInt());
-
-                    m_dataIsUserEvent.append(1);
-                    m_dataGroup.append(m_iSelectedGroup);
-                    break;
-                }
-            }
-        }
-    }
-
     beginInsertRows(QModelIndex(), position, position+span-1);
+
+    if(m_sFilterEventType == "All")
+        m_pEvents.addEvent(Event(m_iSamplePos, m_iType, m_iSelectedGroup));
+    else
+        m_pEvents.addEvent(Event(m_iSamplePos, m_sFilterEventType.toInt(), m_iSelectedGroup));
 
     endInsertRows();
 
@@ -341,18 +306,18 @@ bool AnnotationModel::setData(const QModelIndex &index,
                               const QVariant &value,
                               int role)
 {
-    if(index.row() >= m_dataSamples.size() || index.column() >= columnCount())
+    if(index.row() >= m_pEvents.size() || index.column() >= columnCount())
         return false;
 
     if(role == Qt::EditRole) {
         int column = index.column();
         switch(column) {
             case 0: //sample values
-                m_dataSamples[index.row()] = value.toInt() + m_iFirstSample;
+                m_pEvents[index.row()].setSample(value.toInt() + m_iFirstSample);
                 break;
 
             case 1: //time values
-                m_dataSamples[index.row()] = value.toDouble() * m_fFreq + m_iFirstSample;
+                m_pEvents[index.row()].setSample(value.toDouble() * m_fFreq + m_iFirstSample);
                 break;
 
             case 2: //type
