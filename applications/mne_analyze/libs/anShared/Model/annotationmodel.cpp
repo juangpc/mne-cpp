@@ -420,18 +420,11 @@ bool AnnotationModel::removeRows(int position,
 
     beginRemoveRows(QModelIndex(), position, position+span-1);
 
-    for (int i = 0; i < span; ++i) {
-        //Only user events can be deleted
-        if(m_dataIsUserEvent[position] == 1) {
-            m_dataSamples.removeAt(position);
-            m_dataTypes.removeAt(position);
-            m_dataIsUserEvent.removeAt(position);
-        }
-    } 
+    m_eventList.remove(position,
+                       span);
 
     endRemoveRows();
 
-    //Update filtered event data
     updateEventFilter();
 
     return true;

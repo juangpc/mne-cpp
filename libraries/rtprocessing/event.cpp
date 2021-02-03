@@ -163,9 +163,20 @@ bool EventList::isEmpty() const
 
 //=============================================================================================================
 
-void EventList::insert(int iIndex, const Event &event)
+void EventList::insert(int iIndex,
+                       const Event &event)
 {
     m_lEvents.insert(iIndex, event);
+}
+
+//=============================================================================================================
+
+void EventList::remove(int iIndex,
+                       int iSpan)
+{
+    for(int i = 0; i < iSpan; i++){
+        m_lEvents.removeAt(iIndex);
+    }
 }
 
 //=============================================================================================================

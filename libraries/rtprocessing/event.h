@@ -170,7 +170,12 @@ public:
     bool isEmpty() const;
 
     //=========================================================================================================
-    void insert(int iIndex, const Event& event);
+    void insert(int iIndex,
+                const Event& event);
+
+    //=========================================================================================================
+    void remove(int iIndex,
+                int iSpan = 1);
 
     Event& operator[](int i);
     const Event& operator[](int i) const;
