@@ -170,9 +170,9 @@ bool AnnotationModel::insertRows(int position,
     beginInsertRows(QModelIndex(), position, position+span-1);
 
     if(m_sFilterEventType == "All")
-        m_pEvents.addEvent(Event(m_iSamplePos, m_iType, m_iSelectedGroup));
+        m_eventList.addEvent(Event(m_iSamplePos, m_iType, m_iSelectedGroup));
     else
-        m_pEvents.addEvent(Event(m_iSamplePos, m_sFilterEventType.toInt(), m_iSelectedGroup));
+        m_eventList.addEvent(Event(m_iSamplePos, m_sFilterEventType.toInt(), m_iSelectedGroup));
 
     endInsertRows();
 
@@ -306,18 +306,18 @@ bool AnnotationModel::setData(const QModelIndex &index,
                               const QVariant &value,
                               int role)
 {
-    if(index.row() >= m_pEvents.size() || index.column() >= columnCount())
+    if(index.row() >= m_eventList.size() || index.column() >= columnCount())
         return false;
 
     if(role == Qt::EditRole) {
         int column = index.column();
         switch(column) {
             case 0: //sample values
-                m_pEvents[index.row()].setSample(value.toInt() + m_iFirstSample);
+                m_eventList[index.row()].setSample(value.toInt() + m_iFirstSample);
                 break;
 
             case 1: //time values
-                m_pEvents[index.row()].setSample(value.toDouble() * m_fFreq + m_iFirstSample);
+                m_eventList[index.row()].setSample(value.toDouble() * m_fFreq + m_iFirstSample);
                 break;
 
             case 2: //type
@@ -352,27 +352,23 @@ void AnnotationModel::updateEventFilter()
     m_dataIsUserEventFiltered.clear();
     m_dataGroupFiltered.clear();
 
+    m_eventListFiltered.clear();
+
     //Fill filtered event data depending on the user defined event filter type
     if(m_sFilterEventType == "All") {
-        m_dataSamplesFiltered = m_dataSamples;
-        m_dataTypesFiltered = m_dataTypes;
-        m_dataIsUserEventFiltered = m_dataIsUserEvent;
-        m_dataGroupFiltered = m_dataGroup;
+        m_eventListFiltered = m_eventList;
     }
     else {
-        for(int i = 0; i<m_dataSamples.size(); i++) {
-            if(m_dataTypes[i] == m_sFilterEventType.toInt()) {
-                m_dataSamplesFiltered.append(m_dataSamples[i]);
-                m_dataTypesFiltered.append(m_dataTypes[i]);
-                m_dataIsUserEventFiltered.append(m_dataIsUserEvent[i]);
-                m_dataGroupFiltered.append(m_dataGroup[i]);
+        for(int i = 0; i < m_eventList.size(); i++) {
+            if(m_eventList[i].getType() == m_sFilterEventType.toInt()) {
+                m_eventListFiltered.append(m_eventList[i]);
             }
         }
         m_iLastTypeAdded = m_sFilterEventType.toInt();
     }
 
-    emit dataChanged(createIndex(0,0), createIndex(m_dataSamplesFiltered.size(), 0));
-    emit headerDataChanged(Qt::Vertical, 0, m_dataSamplesFiltered.size());
+    emit dataChanged(createIndex(0,0), createIndex(m_eventListFiltered.size(), 0));
+    emit headerDataChanged(Qt::Vertical, 0, m_eventListFiltered.size());
 }
 
 //=============================================================================================================

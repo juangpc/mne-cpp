@@ -128,6 +128,13 @@ void EventList::addEvent(const Event& event)
 
 //=============================================================================================================
 
+void EventList::append(const Event &event)
+{
+    m_lEvents.append(event);
+}
+
+//=============================================================================================================
+
 int EventList::size() const
 {
     return m_lEvents.size();

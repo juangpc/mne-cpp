@@ -739,8 +739,8 @@ private:
 
     QSharedPointer<FiffRawViewModel>    m_pFiffModel;                   /**< Pointer to FiffRawViewModel associated with the events stored in this model */
 
-    RTPROCESSINGLIB::EventList          m_pEvents;
-    RTPROCESSINGLIB::EventList          m_pEventsFiltered;
+    RTPROCESSINGLIB::EventList          m_eventList;
+    RTPROCESSINGLIB::EventList          m_eventListFiltered;
 };
 
 //=============================================================================================================

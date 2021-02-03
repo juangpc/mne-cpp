@@ -139,11 +139,14 @@ public:
 
     //=========================================================================================================
     /**
-     * Adds event to event handler and static event list
+     * Adds event to event handler and static event list. Keeps list sorted.
      *
      * @param event
      */
     void addEvent(const Event& event);
+
+    //=========================================================================================================
+    void append(const Event& event);
 
     //=========================================================================================================
     /**
