@@ -224,7 +224,7 @@ QVariant AnnotationModel::data(const QModelIndex &index,
         if(index.column()==0) {
             switch(role) {
                 case Qt::DisplayRole:
-                    return QVariant(m_dataSamplesFiltered.at(index.row())-m_iFirstSample);
+                    return QVariant(m_eventListFiltered.at(index.row()).getSample() - m_iFirstSample);
 
             case Qt::BackgroundRole:
                 //Paint different background if event was set by user
@@ -251,7 +251,7 @@ QVariant AnnotationModel::data(const QModelIndex &index,
         if(index.column()==1){
             switch(role) {
                 case Qt::DisplayRole: {
-                    int time = ((m_dataSamplesFiltered.at(index.row()) - m_iFirstSample) / m_fFreq) * 1000;
+                    int time = ((m_eventListFiltered.at(index.row()).getSample() - m_iFirstSample) / m_fFreq) * 1000;
 
                     return QVariant((double)time / 1000);
                 }
@@ -281,7 +281,7 @@ QVariant AnnotationModel::data(const QModelIndex &index,
         if(index.column()==2) {
             switch(role) {
                 case Qt::DisplayRole:
-                    return QVariant(m_dataTypesFiltered.at(index.row()));
+                    return QVariant(m_eventListFiltered.at(index.row()).getType());
 
                 case Qt::BackgroundRole: {
                     QBrush brush;
