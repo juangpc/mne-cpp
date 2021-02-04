@@ -680,26 +680,31 @@ void AnnotationModel::switchGroup(int iGroupIndex)
 {
     beginResetModel();
 
-    if ((!m_dataSamples.isEmpty()) && (m_iSelectedGroup != ALLGROUPS)){
-        saveGroup();
-    }
-
-    m_dataSamples = m_mAnnotationHub[iGroupIndex]->dataSamples;
-    m_dataTypes = m_mAnnotationHub[iGroupIndex]->dataTypes;
-    m_dataIsUserEvent = m_mAnnotationHub[iGroupIndex]->dataIsUserEvent;
-
-    m_dataSamplesFiltered = m_mAnnotationHub[iGroupIndex]->dataSamples_Filtered;
-    m_dataTypesFiltered = m_mAnnotationHub[iGroupIndex]->dataTypes_Filtered;
-    m_dataIsUserEventFiltered = m_mAnnotationHub[iGroupIndex]->dataIsUserEvent_Filtered;
 
     m_iSelectedGroup = m_mAnnotationHub[iGroupIndex]->groupNumber;
-    m_bIsUserMade = m_mAnnotationHub[iGroupIndex]->isUserMade;
-    m_iType = m_mAnnotationHub[iGroupIndex]->groupType;
 
-    m_dataGroup.clear();
-    for(int i = 0; i < m_mAnnotationHub[iGroupIndex]->dataSamples.size(); i++){
-        m_dataGroup.append(m_iSelectedGroup);
-    }
+    updateEventFilter();
+
+//    if ((!m_dataSamples.isEmpty()) && (m_iSelectedGroup != ALLGROUPS)){
+//        saveGroup();
+//    }
+
+//    m_dataSamples = m_mAnnotationHub[iGroupIndex]->dataSamples;
+//    m_dataTypes = m_mAnnotationHub[iGroupIndex]->dataTypes;
+//    m_dataIsUserEvent = m_mAnnotationHub[iGroupIndex]->dataIsUserEvent;
+
+//    m_dataSamplesFiltered = m_mAnnotationHub[iGroupIndex]->dataSamples_Filtered;
+//    m_dataTypesFiltered = m_mAnnotationHub[iGroupIndex]->dataTypes_Filtered;
+//    m_dataIsUserEventFiltered = m_mAnnotationHub[iGroupIndex]->dataIsUserEvent_Filtered;
+
+//    m_iSelectedGroup = m_mAnnotationHub[iGroupIndex]->groupNumber;
+//    m_bIsUserMade = m_mAnnotationHub[iGroupIndex]->isUserMade;
+//    m_iType = m_mAnnotationHub[iGroupIndex]->groupType;
+
+//    m_dataGroup.clear();
+//    for(int i = 0; i < m_mAnnotationHub[iGroupIndex]->dataSamples.size(); i++){
+//        m_dataGroup.append(m_iSelectedGroup);
+//    }
 
     endResetModel();
 }
