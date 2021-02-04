@@ -330,16 +330,13 @@ void FiffRawViewDelegate::createMarksPath(const QModelIndex &index,
     //QMap<int, QColor> typeColor = t_pAnnModel->getTypeColors();
     QMap<int, QColor> groupColor = t_pAnnModel->getGroupColors();
 
-    for(int i = 0; i < t_pModel->getTimeListSize(); i++) {
-        unsigned int uiTime = t_pModel->getTimeMarks(i);
-        if ((t_pModel->getTimeMarks(i) > iStart) && (uiTime < (iStart + data.size()))) {
-//            int type = t_pAnnModel->data(t_pAnnModel->index(i,2)).toInt();
-//            painter->setPen(QPen(typeColor.value(type), Qt::black));
-            int group = t_pAnnModel->currentGroup(i);
-            painter->setPen(QPen(groupColor.value(group), 1, Qt::SolidLine));
-            painter->drawLine(fInitX + static_cast<float>(t_pModel->getTimeMarks(i) - iStart) * dDx,
+    for(int i = 0; i < t_pAnnModel->getNumberOfEvents(); i++) {
+        RTPROCESSINGLIB::Event event = t_pAnnModel->getEvent(i);
+        if ((event.getSample() > iStart) && (event.getSample() < (iStart + data.size()))) {
+            painter->setPen(QPen(groupColor.value(event.getGroup()), 1, Qt::SolidLine));
+            painter->drawLine(fInitX + static_cast<float>(event.getSample() - iStart) * dDx,
                               fTop,
-                              fInitX + static_cast<float>(t_pModel->getTimeMarks(i) - iStart) * dDx,
+                              fInitX + static_cast<float>(event.getSample() - iStart) * dDx,
                               fBottom);
         }
     }

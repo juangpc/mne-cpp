@@ -456,7 +456,7 @@ void AnnotationModel::setSampleFreq(float fFreq)
 
 //=============================================================================================================
 
-int AnnotationModel::getNumberOfAnnotations() const
+int AnnotationModel::getNumberOfEvents() const
 {
     if (m_iSelectedCheckState){
         return m_dataSelectedRows.size();
@@ -577,7 +577,7 @@ bool AnnotationModel::saveToFile(const QString& sPath)
     }
 
     QTextStream out(&file);
-    for(int i = 0; i < this->getNumberOfAnnotations(); i++) {
+    for(int i = 0; i < this->getNumberOfEvents(); i++) {
         int iAnnotation = this->getAnnotation(i);
         out << "  " << iAnnotation << "   " << QString::number(static_cast<float>(iAnnotation - m_pFiffModel->absoluteFirstSample()) / this->getFreq(), 'f', 4) << "          0         1" << endl;
         out << "  " << iAnnotation << "   " << QString::number(static_cast<float>(iAnnotation - m_pFiffModel->absoluteFirstSample()) / this->getFreq(), 'f', 4) << "          1         0" << endl;
@@ -630,8 +630,8 @@ MatrixXi AnnotationModel::getAnnotationMatrix(int iGroup)
 
     if(iGroup == 9999){
         //Current selecting in Event Plugin
-        matEventDataMatrix.resize(getNumberOfAnnotations(), 3);
-        for (int i = 0; i < getNumberOfAnnotations(); i++){
+        matEventDataMatrix.resize(getNumberOfEvents(), 3);
+        for (int i = 0; i < getNumberOfEvents(); i++){
             matEventDataMatrix(i,0) = getAnnotation(i);
             matEventDataMatrix(i,1) = 0;
             matEventDataMatrix(i,2) = 1;

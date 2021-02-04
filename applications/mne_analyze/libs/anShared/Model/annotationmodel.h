@@ -294,7 +294,7 @@ public:
      *
      * @return number on annotations to display
      */
-    int getNumberOfAnnotations() const;
+    int getNumberOfEvents() const;
 
     //=========================================================================================================
     /**

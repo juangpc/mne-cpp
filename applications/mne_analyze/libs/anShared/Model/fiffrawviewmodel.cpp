@@ -439,7 +439,7 @@ int FiffRawViewModel::getTimeMarks(int iIndex) const
 int FiffRawViewModel::getTimeListSize() const
 {
     if(m_pAnnotationModel){
-        return m_pAnnotationModel->getNumberOfAnnotations();
+        return m_pAnnotationModel->getNumberOfEvents();
     } else {
         return 0;
     }
