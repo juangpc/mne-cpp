@@ -478,6 +478,13 @@ int AnnotationModel::getAnnotation(int iIndex) const
 
 //=============================================================================================================
 
+RTPROCESSINGLIB::Event AnnotationModel::getEvent(int iIndex) const
+{
+    return m_eventListFiltered.at(iIndex);
+}
+
+//=============================================================================================================
+
 void AnnotationModel::addNewAnnotationType(const QString &eventType,
                                            const QColor &typeColor)
 {
@@ -816,9 +823,9 @@ int AnnotationModel::currentGroup(int iIndex)
 {
     //return m_dataGroup[iIndex];
     if (m_iSelectedCheckState){
-        return m_dataGroup[m_dataSelectedRows.at(iIndex)];
+        return m_eventListFiltered.at(m_dataSelectedRows.at(iIndex)).getGroup();
     } else {
-        return m_dataGroup[iIndex];
+        return m_eventListFiltered.at(iIndex).getGroup();
     }
 }
 

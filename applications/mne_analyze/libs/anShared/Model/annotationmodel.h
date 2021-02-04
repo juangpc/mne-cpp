@@ -307,6 +307,9 @@ public:
     int getAnnotation(int iIndex) const;
 
     //=========================================================================================================
+    RTPROCESSINGLIB::Event getEvent(int iIndex) const;
+
+    //=========================================================================================================
     /**
      * Returns map of the colors assigned to each of the annotation types
      *
