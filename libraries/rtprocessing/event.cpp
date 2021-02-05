@@ -38,6 +38,7 @@
 //=============================================================================================================
 
 #include "event.h"
+#include <stdlib.h>
 
 //=============================================================================================================
 // QT INCLUDES
@@ -57,28 +58,31 @@ using namespace RTPROCESSINGLIB;
 // DEFINE MEMBER METHODS
 //=============================================================================================================
 
-Event::Event(int iSample)
-: Event(iSample,0,0)
+
+EventGroupList eventGroups;
+
+eventGroups.list.push_back()
+
+Event::Event(int iSampleStart)
+: Event(iSampleStart, defaultGroup, 0)
 {
 
 }
 
 //=============================================================================================================
 
-Event::Event(int iSample, int iType)
-: Event(iSample, iType, 0)
+Event::Event(int iSampleStart, const EventGroup& group)
+: Event(iSampleStart, group, 0)
 {
 
 }
 
 //=============================================================================================================
 
-Event::Event(int iSample,
-             int iType,
-             int iGroup)
+Event::Event(int iSample, const EventGroup& group, int iType)
 : m_iSample(iSample)
+, m_iGroup(group)
 , m_iType(iType)
-, m_iGroup(iGroup)
 {
 
 }
@@ -214,4 +218,48 @@ Event& EventList::operator[](int i)
 const Event& EventList::operator[](int i) const
 {
     return m_lEvents.at(i);
+}
+
+
+//=============================================================================================================
+
+EventGroup::EventGroup(const char* name)
+: m_sName(name)
+{
+    setRandomColor();
+    setRandomId();
+
+}
+
+//=============================================================================================================
+
+void EventGroup::setColor(const char* color)
+{
+    m_Color[0] = color[0];
+    m_Color[1] = color[1];
+    m_Color[2] = color[2];
+    m_Color[3] = color[3];
+}
+
+
+//=============================================================================================================
+
+void EventGroup::setRandomId()
+{
+    m_Id = rand();
+}
+
+//=============================================================================================================
+
+void EventGroup::setRandomColor()
+{
+    m_Color[0] = rand() % 256;
+    m_Color[1] = rand() % 256;
+    m_Color[2] = rand() % 256;
+    m_Color[3] = 0xFF;
+}
+
+std::string EventGroup::getName() const
+{
+    return m_sName;
 }
