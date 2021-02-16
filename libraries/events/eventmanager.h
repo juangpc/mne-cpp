@@ -1,22 +1,15 @@
 #ifndef EVENTMANAGER_EVENTS_H
 #define EVENTMANAGER_EVENTS_H
 
-#include "events_global.h"
 #include "event.h"
-#include "eventgroup.h"
-//#include "eventsharedmemmanager.h"
+#include "eventdatabase.h"
+#include "eventsharedmemmanager.h"
 
 #include <string>
 #include <optional>
-#include <map>
-#include <unordered_map>
+
 #include <vector>
 #include <memory>
-
-
-namespace EVENTSINTERNAL {
-    class EventSharedMemManager;
-}
 
 namespace EVENTSLIB {
 
@@ -71,21 +64,9 @@ public:
     bool isSharedMemoryInit();
 
 private:
-    idNum generateNewEventId() const;
-    idNum generateNewGroupId() const;
-
-    void insertEvent(const EVENTSINTERNAL::EventINT& e);
-    std::optional<std::multimap<const int, EVENTSINTERNAL::EventINT>::const_iterator>
-    findEventINT(idNum id) const;
-
-    std::multimap<int, EVENTSINTERNAL::EventINT>    m_EventsListBySample;
-    std::unordered_map<idNum, int>                  m_MapIdToSample;
-    std::map<idNum, EVENTSINTERNAL::EventGroupINT>  m_GroupsList;
-
     std::unique_ptr<EVENTSINTERNAL::EventSharedMemManager>  m_pSharedMemManager;
+    std::shared_ptr<EVENTSINTERNAL::EventDatabase>          m_pDatabase;
 
-    static idNum                                    m_iEventIdCounter;
-    static idNum                                    m_iGroupIdCounter;
 };
 
 template<typename T>

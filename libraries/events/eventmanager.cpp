@@ -2,9 +2,6 @@
 
 using namespace EVENTSLIB;
 
-idNum EventManager::m_iEventIdCounter(0);
-idNum EventManager::m_iGroupIdCounter(0);
-
 //=============================================================================================================
 
 EventManager::EventManager()
@@ -17,27 +14,10 @@ EventManager::EventManager()
 
 std::optional<Event> EventManager::getEvent(idNum eventId) const
 {
-    auto eventInt = findEventINT(eventId);
+    auto eventInt = m_pDatabase->findEventById(eventId);
     if(eventInt.has_value())
     {
-        return Event(eventInt.value()->second);
-    }
-    return {};
-}
-
-//=============================================================================================================
-
-std::optional<std::multimap<const int, EVENTSINTERNAL::EventINT>::const_iterator>
-EventManager::findEventINT(idNum eventId) const
-{
-    int sample = m_MapIdToSample.at(eventId);
-    auto eventsRange = m_EventsListBySample.equal_range(sample);
-    for(auto e = eventsRange.first; e != eventsRange.second; ++e)
-    {
-        if( e->second.getId() == eventId)
-        {
-            return e;
-        }
+        return Event(eventInt.value());
     }
     return {};
 }
@@ -64,7 +44,7 @@ EventManager::getEvents(const std::vector<idNum> eventIds) const
 std::unique_ptr<std::vector<Event> > EventManager::getAllEvents() const
 {
     auto pEventsList(allocateOutputContainer<Event>(getNumEvents()));
-    for(auto& e: m_EventsListBySample)
+    for(auto& e: m_pDatabase->m_EventsListBySample)
     {
         pEventsList->emplace_back(Event(e.second));
     }
@@ -75,10 +55,10 @@ std::unique_ptr<std::vector<Event> > EventManager::getAllEvents() const
 
 std::unique_ptr<std::vector<Event> > EventManager::getEventsInSample(int sample) const
 {
-    int numEventsInSample = m_EventsListBySample.count(sample);
+    int numEventsInSample = m_pDatabase->m_EventsListBySample.count(sample);
     auto pEventsList(allocateOutputContainer<Event>(numEventsInSample));
 
-    auto eventsRange = m_EventsListBySample.equal_range(sample);
+    auto eventsRange = m_pDatabase->m_EventsListBySample.equal_range(sample);
     for(auto e = eventsRange.first; e != eventsRange.second; e++)
     {
         pEventsList->emplace_back(Event(e->second));
@@ -94,8 +74,8 @@ EventManager::getEventsBetween(int sampleStart, int sampleEnd) const
     int memoryHint = ((sampleEnd-sampleStart)/1000)+2;
     auto pEventsList(allocateOutputContainer<Event>(memoryHint));
 
-    auto eventStart = m_EventsListBySample.lower_bound(sampleStart);
-    auto eventEnd = m_EventsListBySample.upper_bound(sampleEnd);
+    auto eventStart = m_pDatabase->m_EventsListBySample.lower_bound(sampleStart);
+    auto eventEnd = m_pDatabase->m_EventsListBySample.upper_bound(sampleEnd);
 
     for(auto e = eventStart; e != eventEnd; e++)
     {
@@ -112,8 +92,8 @@ EventManager::getEventsBetween(int sampleStart, int sampleEnd, idNum groupId) co
     int memoryHint = ((sampleEnd-sampleStart)/1000)+2;
     auto pEventsList(allocateOutputContainer<Event>(memoryHint));
 
-    auto eventStart = m_EventsListBySample.lower_bound(sampleStart);
-    auto eventEnd = m_EventsListBySample.upper_bound(sampleEnd);
+    auto eventStart = m_pDatabase->m_EventsListBySample.lower_bound(sampleStart);
+    auto eventEnd = m_pDatabase->m_EventsListBySample.upper_bound(sampleEnd);
 
     for(auto e = eventStart; e != eventEnd; e++)
     {
@@ -134,8 +114,8 @@ EventManager::getEventsBetween(int sampleStart, int sampleEnd, const std::vector
     auto pEventsList(allocateOutputContainer<Event>(memoryHint));
 
 
-    auto eventStart = m_EventsListBySample.lower_bound(sampleStart);
-    auto eventEnd = m_EventsListBySample.upper_bound(sampleEnd);
+    auto eventStart = m_pDatabase->m_EventsListBySample.lower_bound(sampleStart);
+    auto eventEnd = m_pDatabase->m_EventsListBySample.upper_bound(sampleEnd);
 
     for(auto e = eventStart; e != eventEnd; e++)
     {
@@ -157,7 +137,7 @@ EventManager::getEventsInGroup(const idNum groupId) const
 {
     auto pEventsList(allocateOutputContainer<Event>());
 
-    for(const auto& e: m_EventsListBySample)
+    for(const auto& e: m_pDatabase->m_EventsListBySample)
     {
         if(e.second.getGroupId() == groupId)
         {
@@ -169,31 +149,17 @@ EventManager::getEventsInGroup(const idNum groupId) const
 
 //=============================================================================================================
 
-idNum EventManager::generateNewEventId() const
-{
-    return ++m_iEventIdCounter;
-}
-
-//=============================================================================================================
-
-idNum EventManager::generateNewGroupId() const
-{
-    return ++m_iGroupIdCounter;
-}
-
-//=============================================================================================================
-
 size_t EventManager::getNumEvents() const
 {
-    return m_EventsListBySample.size();
+    return m_pDatabase->getNumEvents();
 }
 
 //=============================================================================================================
 
 Event EventManager::addEvent(int sample, idNum groupId)
 {
-    EVENTSINTERNAL::EventINT newEvent(generateNewEventId(), sample, groupId);
-    insertEvent(newEvent);
+
+    auto newEvent = m_pDatabase->insertEvent(sample, groupId);
 
     if(m_pSharedMemManager->isInit())
     {
@@ -208,10 +174,10 @@ Event EventManager::addEvent(int sample, idNum groupId)
 bool EventManager::moveEvent(idNum eventId, int newSample)
 {
     bool status(false);
-    auto event = findEventINT(eventId);
+    auto event = m_pDatabase->findEventById(eventId);
     if(event.has_value())
     {
-        EVENTSINTERNAL::EventINT newEvent(event.value()->second);
+        EVENTSINTERNAL::EventINT newEvent(event.value());
         newEvent.setSample(newSample);
         deleteEvent(eventId);
         insertEvent(newEvent);
@@ -224,19 +190,11 @@ bool EventManager::moveEvent(idNum eventId, int newSample)
 
 bool EventManager::deleteEvent(idNum eventId) noexcept
 {
-    bool status(false);
-    auto event = findEventINT(eventId);
-    if(event.has_value())
+    bool status = m_pDatabase->deleteEvent(eventId);
+
+    if(m_pSharedMemManager->isInit())
     {
-        m_EventsListBySample.erase(event.value());
-        m_MapIdToSample.erase(eventId);
-
-        if(m_pSharedMemManager->isInit())
-        {
-            m_pSharedMemManager->deleteEvent(event.value()->second.getSample());
-        }
-
-        status = true;
+        m_pSharedMemManager->deleteEvent(event.value()->second.getSample());
     }
     return status;
 }
@@ -277,14 +235,6 @@ bool EventManager::deleteEventsInGroup(idNum groupId)
         }
     }
     return deleteEvents(idList);
-}
-
-//=============================================================================================================
-
-void EventManager::insertEvent(const EVENTSINTERNAL::EventINT& e)
-{
-    m_EventsListBySample.emplace(std::make_pair(e.getSample(),e));
-    m_MapIdToSample[e.getId()] = e.getSample();
 }
 
 //=============================================================================================================
