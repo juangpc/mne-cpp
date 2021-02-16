@@ -59,6 +59,10 @@
 // FORWARD DECLARATIONS
 //=============================================================================================================
 
+namespace RTPROCESSINGLIB{
+    class EventList;
+}
+
 //=============================================================================================================
 // DEFINE NAMESPACE DISPLIB
 //=============================================================================================================
@@ -69,6 +73,8 @@ namespace DISPLIB
 //=============================================================================================================
 // DISPLIB FORWARD DECLARATIONS
 //=============================================================================================================
+
+class RtFiffRawView;
 
 //=============================================================================================================
 // DEFINE TYPEDEFS
@@ -96,7 +102,7 @@ public:
      *
      * @param[in] parent     Parent of the delegate
      */
-    RtFiffRawViewDelegate(QObject *parent = 0);
+    RtFiffRawViewDelegate(RtFiffRawView* parent = 0);
 
     //=========================================================================================================
     /**
@@ -161,6 +167,14 @@ public:
      */
     void setUpperItemIndex(int iUpperItemIndex);
 
+    //=========================================================================================================
+    /**
+     * @brief setEventList
+     *
+     * @param pEventList
+     */
+    void setEventList(QSharedPointer<RTPROCESSINGLIB::EventList> pEventList);
+
 private:
     //=========================================================================================================
     /**
@@ -169,16 +183,12 @@ private:
      * @param[in] index      Used to locate data in a data model.
      * @param[in] option     Describes the parameters used to draw an item in a view widget
      * @param[in,out] path   The QPointerPath to create for the data plot.
-     * @param[in] ellipsePos Position of the ellipse which is plotted at the current channel signal value.
-     * @param[in] amplitude  String which is to be plotted.
      * @param[in] data       Current data for the given row.
      */
     void createPlotPath(const QModelIndex &index,
                         const QStyleOptionViewItem &option,
                         QPainterPath& path,
-                        QPointF &ellipsePos,
-                        QString &amplitude,
-                        DISPLIB::RowVectorPair &data) const;
+                        const DISPLIB::RowVectorPair &data) const;
 
     //=========================================================================================================
     /**
@@ -243,8 +253,29 @@ private:
      * @param[in] option     Describes the parameters used to draw an item in a view widget.
      * @param[in,out] path   The QPointerPath to create for the data plot.
      */
-    void createMarkerPath(const QStyleOptionViewItem &option, QPainterPath& path) const;
+    void createMarkerPath(const QModelIndex &index, const QStyleOptionViewItem &option, QPainterPath& path) const;
 
+    //=========================================================================================================
+    /**
+     * Calc Point to plot given current path y values and x increments.
+     *
+     * @param[in] path  The QPointerPath to retrieve current position of plot.
+     * @param[in] dx    The X increment.
+     * @param[in] y     The new y value to plot.
+     * @param[in] ybase   The y offset to apply.
+     * @param[in] yscale   The y scaling factor to apply.
+     */
+    inline QPointF calcPoint(QPainterPath& path, const double dx, const double y, const double ybase, const double yScale) const;
+
+    //=========================================================================================================
+    /**
+     * Allows to access the parent Object (FiffRawView) sampling frequency member and returns the sampling period.
+     *
+     */
+    inline double retrieveSamplingPeriod() const;
+
+
+    RtFiffRawView*      m_pParent;          /**< Pointer to parent class. **/
     QPoint              m_markerPosition;   /**< Current mouse position used to draw the marker in the plot. */
     QList<QPainterPath> m_painterPaths;     /**< List of all current painter paths for each row. */
 
@@ -266,6 +297,8 @@ private:
     QPen        m_penNormalSelectedBad;     /**< Pen for drawing the data when bad data is plotted normally without freeze on and channel is selected.  */
 
     QMap<double,QColor> m_mapTriggerColors; /**< Colors per trigger. */
+
+    QSharedPointer<RTPROCESSINGLIB::EventList>  m_pEventList;                   /**< List of events */
 };
 } // NAMESPACE
 

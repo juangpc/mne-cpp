@@ -69,6 +69,7 @@ namespace FIFFLIB {
 
 namespace RTPROCESSINGLIB {
     class FilterKernel;
+    class EventList;
 }
 
 //=============================================================================================================
@@ -391,6 +392,12 @@ public:
      */
     void clearView();
 
+    //=========================================================================================================
+    /**
+     * Getter fcn for Sampling Frequency member.
+     */
+    float getSamplingFreq() const;
+
 protected:
     //=========================================================================================================
     /**
@@ -446,6 +453,12 @@ protected:
      */
     void markChBad();
 
+    //=========================================================================================================
+    /**
+     * Adds event to event list based on last clicked position
+     */
+    void onAddEventMarker();
+
     QPointer<QTableView>                        m_pTableView;                   /**< The QTableView being part of the model/view framework of Qt */
     QPointer<DISPLIB::RtFiffRawViewDelegate>    m_pDelegate;                    /**< The channel data delegate */
     QPointer<DISPLIB::RtFiffRawViewModel>       m_pModel;                       /**< The channel data model */
@@ -462,8 +475,11 @@ protected:
     QStringList                                 m_slSelectedChannels;           /**< the currently selected channels from the selection manager window. */
     QColor                                      m_backgroundColor;              /**< Current background color. */
     int                                         m_iDistanceTimeSpacer;          /**< Current distance between time spacer. */
+    int                                         m_iClickPosX;
 
     QString                                     m_sSettingsPath;                /**< The settings path to store the GUI settings to. */
+
+    QSharedPointer<RTPROCESSINGLIB::EventList>  m_pEventList;                   /**< List of events */
 
 signals:    
     //=========================================================================================================
@@ -483,6 +499,10 @@ signals:
     void triggerDetected(int numberDetectedTriggers,
                          const QMap<int,QList<QPair<int,double> > >& mapDetectedTriggers);
 
+    //=========================================================================================================
+    /**
+     * Emmited when marking of bad channels is changed
+     */
     void channelMarkingChanged();
 };
 } // NAMESPACE

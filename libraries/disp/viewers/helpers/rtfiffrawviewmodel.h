@@ -502,6 +502,23 @@ public:
      */
     inline int getCurrentOverlapAddDelay() const;
 
+    //=========================================================================================================
+    /**
+     * Get offset of first drawn sample in the window
+     *
+     * @return sample offset of window
+     */
+    inline int getFirstSampleOffset() const;
+
+    //=========================================================================================================
+    /**
+     * Get maximum range of respective channel type. range value in FiffChInfo does not seem to contain a reasonable value
+     *
+     * @param [in] Row of the model
+     * @return the max value of the y axis for the channel
+     */
+    double getMaxValueFromRawViewModel(int row) const;
+
 private:
     //=========================================================================================================
     /**
@@ -545,6 +562,7 @@ private:
     qint32                              m_iDownsampling;                            /**< Down sampling factor */
     qint32                              m_iMaxSamples;                              /**< Max samples per window */
     qint32                              m_iCurrentSample;                           /**< Current sample which holds the current position in the data matrix */
+    qint32                              m_iCurrentStartingSample;                   /**< Accumulates cumulative starting sample position when m_iCurrentSample resets to 0 */
     qint32                              m_iCurrentSampleFreeze;                     /**< Current sample which holds the current position in the data matrix when freezing tool is active */
     qint32                              m_iMaxFilterLength;                         /**< Max order of the current filters */
     qint32                              m_iCurrentBlockSize;                        /**< Current block size */
@@ -779,6 +797,13 @@ inline int RtFiffRawViewModel::getCurrentOverlapAddDelay() const
         return m_iMaxFilterLength/2;
     else
         return 0;
+}
+
+//=============================================================================================================
+
+inline int RtFiffRawViewModel::getFirstSampleOffset() const
+{
+    return m_iCurrentStartingSample;
 }
 } // NAMESPACE
 
