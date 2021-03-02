@@ -504,6 +504,10 @@ public:
      */
     void setAnnotationModel(QSharedPointer<ANSHAREDLIB::EventModel> pModel);
 
+    void setScrollerSample(int iScrollerPos);
+
+    int getScrollerPosition() const;
+
 private:
     //=========================================================================================================
     /**
@@ -611,6 +615,7 @@ private:
     QColor                                      m_colBackground;                            /**< The background color.*/
 
     int                                         m_iDistanceTimerSpacer;                     /**< The distance for the horizontal time spacers in the view in ms */
+    int                                         m_iScroller;
 
     qint32                                      m_iScrollPos;                               /**< Position of the scrollbar */
 
