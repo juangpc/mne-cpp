@@ -102,7 +102,7 @@ public:
      * Set the new upper item index color. This is used to only plot the background for the upper, visible item in the QTableView.
      * This is a rather ugly hack in order to cope with QOpenGLWidget's/QtableView's problem when setting a background color.
      *
-     * @param [in] iUpperItem  The new upper item index color.
+     * @param[in] iUpperItem  The new upper item index color.
      */
     void setUpperItemIndex(int iUpperItemIndex);
 
@@ -134,7 +134,7 @@ public:
     /**
      * Set the signal color.
      *
-     * @param [in] signalColor  The new signal color.
+     * @param[in] signalColor  The new signal color.
      */
     void setSignalColor(const QColor& signalColor);
 
@@ -172,11 +172,11 @@ private:
     /**
      * Draws annotations from the FiffRawView model's member Annotation Model
      *
-     * @param index [in]            Used to locate data in the model
-     * @param option [in]           Describes the parameters used to draw an item in a view widget
-     * @param path [in]             The QPointerPath to create the plot.
-     * @param data [in]             Data for the given row.
-     * @param painter [in, out]     Used for drawing the annotations
+     * @param[in] index            Used to locate data in the model
+     * @param[in] option           Describes the parameters used to draw an item in a view widget
+     * @param[in] path             The QPointerPath to create the plot.
+     * @param[in] data             Data for the given row.
+     * @param[in,out] painter     Used for drawing the annotations
      */
     void createMarksPath(const QModelIndex &index,
                                const QStyleOptionViewItem &option,
