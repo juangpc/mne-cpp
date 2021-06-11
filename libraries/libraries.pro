@@ -51,6 +51,7 @@ SUBDIRS += \
     rtprocessing \
     connectivity \
     disp \
+    core \
 
     qtHaveModule(charts) {
         # The Qt3D module is not yet Wasm supported
