@@ -50,7 +50,7 @@ SUBDIRS += \
     mne_forward_solution \
     mne_anonymize \
     mne_edf2fiff \
-    mne_virtual_meeg \
+    mne_virtual_meeg
 
     qtHaveModule(charts) {
 
