@@ -32,8 +32,10 @@ CONFIG(debug, debug|release) {
 }
 
 SOURCES += \
+    commandlineoptionsparser.cpp
 
 HEADERS += \
+    commandlineoptionsparser.h
 
 INCLUDEPATH += $${MNE_INCLUDE_DIR}
 
