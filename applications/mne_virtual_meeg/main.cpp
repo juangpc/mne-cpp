@@ -31,3 +31,56 @@
  *
  *
  */
+//=============================================================================================================
+// INCLUDES
+//=============================================================================================================
+
+#include <iostream>
+
+//=============================================================================================================
+// EIGEN INCLUDES
+//=============================================================================================================
+
+//=============================================================================================================
+// QT INCLUDES
+//=============================================================================================================
+
+#include <QDebug>
+
+//=============================================================================================================
+// FORWARD DECLARATIONS
+//=============================================================================================================
+
+namespace MNEVIRTUALMEEG {
+
+}
+
+//=============================================================================================================
+// USED NAMESPACES
+//=============================================================================================================
+
+using namespace MNEVIRTUALMEEG;
+
+//=============================================================================================================
+// MAIN
+//=============================================================================================================
+
+/**
+ * The function main marks the entry point of the mne_virtual_meeg application..
+ *
+ * @param[in] argc (argument count) is an integer that indicates how many arguments were entered on the.
+ * command line when the program was started.
+ * @param[in] argv (argument vector) is an array of pointers to arrays of character objects. The array objects.
+ * are null-terminated strings, representing the arguments that were entered on the command line when the
+ * program was started.
+ *
+ * @return the value that was set to exit() (which is 0 if exit() is called via quit()).
+ */
+int main(int argc, char* argv[])
+{
+//    int osReturnValue(qtApp->exec());
+    int osReturnValue(0);
+    std::cout << "Hello world!" << "\n";
+
+    return osReturnValue;
+}
