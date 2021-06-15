@@ -37,6 +37,13 @@
 //=============================================================================================================
 // INCLUDES
 //=============================================================================================================
+#include "core_global.h"
+#include <string>
+#include <vector>
+#include <map>
+#include <optional>
+
+#include "commandlineoption.h"
 
 //=============================================================================================================
 // FORWARD DECLARATIONS
@@ -52,6 +59,10 @@ namespace CORELIB {
 // FORWARD DECLARATIONS
 //=============================================================================================================
 
+
+
+struct CommandLineOption;
+
 //=============================================================================================================
 /**
  * CommandLineParser class is a tool to parse through the command line arguments provided during the application
@@ -59,11 +70,46 @@ namespace CORELIB {
  *
  * @brief Command-line options parser.
  */
-
-class CommandLineOptionsParser
+class CORESHARED_EXPORT CommandLineOptionsParser
 {
 public:
+
+    /**
+     *
+     * @brief Default class contstructor.
+     *
+     */
     CommandLineOptionsParser();
+
+    //=========================================================================================================
+    /**
+     *
+     * @brief Check if all options have been correctly parsed.
+     *
+     */
+    bool allOptionsParsedCorrectly() const;
+
+    void parse(int argc, char** argv);
+
+    void addOption(const CommandLineOption& opt);
+
+    void clear();
+
+    void setStopOnErrors(bool s);
+
+    bool stopOnErrors() const;
+
+    bool isSet(const std::string& opt) const;
+    const std::string& value(const std::string& opt) const;
+
+private:
+
+    bool optionExists(const std::string& optionName) const;
+    std::optional<std::string> flagExists(const std::string& inputFlag);
+
+    bool m_bOptionsParsedCorrectly;             /**<State variable to check if all options have been correctly parsed>.*/
+    bool m_bStopOnErrors;
+    std::map<std::string, CommandLineOption> m_options;
 };
 
 } // CORELIB namespace

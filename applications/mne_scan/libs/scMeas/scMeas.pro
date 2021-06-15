@@ -38,6 +38,7 @@ include(../../../../mne-cpp.pri)
 TEMPLATE = lib
 
 CONFIG += skip_target_version_ext
+CONFIG += c++17
 
 DEFINES += SCMEAS_LIBRARY
 

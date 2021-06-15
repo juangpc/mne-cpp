@@ -63,6 +63,7 @@ SUBDIRS += \
     }
 
 # Specify library dependencies
+core.depends =
 utils.depends =
 fs.depends = utils
 fiff.depends = utils

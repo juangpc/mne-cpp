@@ -1,12 +1,13 @@
 //=============================================================================================================
 /**
- * @file     main.cpp
- * @author   Juan Garcia-Prieto <jgarciaprieto@mgh.harvard.edu>;
+ * @file     core_global.h
+ * @author   Juan GPC <jgarciaprieto@mgh.harvard.edu>
+ * @since    0.1.0
  * @date     June, 2021
- * @since    0.1.9
  *
  * @section  LICENSE
- * Copyright (C) 2019, Juan Garcia-Prieto. All rights reserved.
+ *
+ * Copyright (C) 2021, Juan GPC. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that
  * the following conditions are met:
@@ -27,55 +28,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  *
- * @brief     Main file for mne_virtaul_meeg application.
- *
+ * @brief    core library export/import macros.
  *
  */
-//=============================================================================================================
-// INCLUDES
-//=============================================================================================================
 
-#include <iostream>
-#include <core/commandlineoptionsparser.h>
+#ifndef CORE_GLOBAL_H
+#define CORE_GLOBAL_H
 
 //=============================================================================================================
-// FORWARD DECLARATIONS
+// QT INCLUDES
 //=============================================================================================================
 
-namespace MNEVIRTUALMEEG {
-
-}
+#include <QtCore/qglobal.h>
 
 //=============================================================================================================
-// USED NAMESPACES
+// DEFINES
 //=============================================================================================================
 
-using namespace MNEVIRTUALMEEG;
+#if defined(STATICBUILD)
+#  define CORESHARED_EXPORT
+#elif defined(CORE_LIBRARY)
+#  define CORESHARED_EXPORT Q_DECL_EXPORT    /**< Q_DECL_EXPORT must be added to the declarations of symbols used when compiling a shared library. */
+#else
+#  define CORESHARED_EXPORT Q_DECL_IMPORT    /**< Q_DECL_IMPORT must be added to the declarations of symbols used when compiling a client that uses the shared library. */
+#endif
 
-//=============================================================================================================
-// MAIN
-//=============================================================================================================
-
-/**
- * The function main marks the entry point of the mne_virtual_meeg application..
- *
- * @param[in] argc (argument count) is an integer that indicates how many arguments were entered on the.
- * command line when the program was started.
- * @param[in] argv (argument vector) is an array of pointers to arrays of character objects. The array objects.
- * are null-terminated strings, representing the arguments that were entered on the command line when the
- * program was started.
- *
- * @return the value that was set to exit() (which is 0 if exit() is called via quit()).
- */
-int main(int argc, char* argv[])
-{
-    std::cout << "Hello!\n";
-//    int osReturnValue(qtApp->exec());
-    int osReturnValue(0);
-    std::cout << "Hello world!" << "\n";
-    CORELIB::CommandLineOptionsParser parser;
-
-    parser.parse(argc, argv);
-
-    return osReturnValue;
-}
+#endif // CORE_GLOBAL_H

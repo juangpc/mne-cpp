@@ -34,6 +34,8 @@
 
 include(../../mne-cpp.pri)
 
+CONFIG += c++17
+
 #Application version
 VERSION_MAJOR = 0
 VERSION_MINOR = 1

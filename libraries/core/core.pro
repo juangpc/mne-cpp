@@ -3,6 +3,7 @@ include(../../mne-cpp.pri)
 TEMPLATE = lib
 
 CONFIG += skip_target_version_ext
+CONFIG += c++17
 
 QT += network concurrent
 QT -= gui
@@ -25,22 +26,25 @@ contains(MNECPP_CONFIG, static) {
 }
 
 LIBS += -L$${MNE_LIBRARY_DIR}
-CONFIG(debug, debug|release) {
-    LIBS += -lmnecppUtilsd \
-} else {
-    LIBS += -lmnecppUtils \
-}
+#CONFIG(debug, debug|release) {
+#    LIBS += -lmnecppUtilsd \
+#} else {
+#    LIBS += -lmnecppUtils \
+#}
 
 SOURCES += \
+    commandlineoption.cpp \
     commandlineoptionsparser.cpp
 
 HEADERS += \
-    commandlineoptionsparser.h
+    commandlineoption.h \
+    commandlineoptionsparser.h \
+    core_global.h
 
 INCLUDEPATH += $${MNE_INCLUDE_DIR}
 
 header_files.files = $${HEADERS}
-header_files.path = $${MNE_INSTALL_INCLUDE_DIR}/events
+header_files.path = $${MNE_INSTALL_INCLUDE_DIR}/core
 
 INSTALLS += header_files
 
