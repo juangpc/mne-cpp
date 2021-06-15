@@ -78,27 +78,27 @@ bool CommandLineOptionsParser::allOptionsParsedCorrectly() const
 void CommandLineOptionsParser::addOption(std::string&& name,
                                          std::vector<std::string>&& flags)
 {
-    m_options.emplace(name, CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue));
+    m_options.emplace_back(name, flags);
 }
 
 void CommandLineOptionsParser::addOption(std::string&& name,
                                          std::vector<std::string>&& flags,
-                                         std::string&& helpLine)
+                                         std::vector<std::string>&& helpLine)
 {
-    m_options.emplace(name, CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue));
+    m_options.emplace_back(name, flags, helpLine, CommandLineOptionType::withoutValue);
 }
 
 void CommandLineOptionsParser::addOption(std::string&& name,
                                          std::vector<std::string>&& flags,
-                                         std::string&& helpLine,
+                                         std::vector<std::string>&& helpLine,
                                          CommandLineOptionType&& type)
 {
-    m_options.emplace(name, CommandLineOption(name, flags, helpLine, type));
+    m_options.emplace_back(name, flags, helpLine, type);
 }
 
 void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 {
-    m_options[opt.name] = opt;
+    m_options.push_back(opt);
 }
 
 //=============================================================================================================
@@ -107,11 +107,11 @@ void CommandLineOptionsParser::parse(int argc, char** argv)
 {
     for(int i = 1; i < argc; ++i)
     {
-        std::cout << "Parsing input " << i << "\n";
         std::string inputflag(argv[i]);
-        if(auto optionName = flagExists(inputflag))
+        auto search = flagSearch(inputflag);
+        if(search.exists)
         {
-            auto& opt = m_options[*optionName];
+            auto& opt = m_options[search.position];
             opt.isSet = true;
             if (opt.type == CommandLineOptionType::withValue)
             {
@@ -140,29 +140,31 @@ void CommandLineOptionsParser::parse(int argc, char** argv)
 
 //=============================================================================================================
 
-bool CommandLineOptionsParser::optionExists(const std::string& opt) const
+CommandLineOptionsParser::searchResult CommandLineOptionsParser::optionSearch(const std::string& optName) const
 {
-    auto searchIt = m_options.find(opt);
-    if (searchIt != m_options.end())
+    for (size_t i = 0; i < m_options.size(); ++i)
     {
-        return true;
-    } else {
-        return false;
+        if(m_options[i].name == optName)
+        {
+            return searchResult(true,i);
+        }
     }
+    return searchResult(false,0);
 }
 
 //=============================================================================================================
 
-std::optional<std::string> CommandLineOptionsParser::flagExists(const std::string& inputFlag)
+CommandLineOptionsParser::searchResult CommandLineOptionsParser::flagSearch(const std::string& inputFlag) const
 {
-    for (auto optsIt = m_options.begin(); optsIt != m_options.end(); ++optsIt)
+
+    for(size_t i = 0; i < m_options.size(); ++i)
     {
-        if (optsIt->second.flagContained(inputFlag))
+        if(m_options[i].flagContained(inputFlag))
         {
-            return std::optional<std::string>(optsIt->first);
+            return searchResult(true, i);
         }
     }
-    return {};
+    return searchResult(false,  0);
 }
 
 //=============================================================================================================
@@ -183,13 +185,69 @@ bool CommandLineOptionsParser::stopOnErrors() const
 
 bool CommandLineOptionsParser::isSet(const std::string& optionName) const
 {
-    return m_options.at(optionName).isSet;
+    return m_options[optionSearch(optionName).position].isSet;
 }
 
 //=============================================================================================================
 
 const std::string& CommandLineOptionsParser::value(const std::string& optionName) const
 {
-    return m_options.at(optionName).value;
+    return m_options[optionSearch(optionName).position].value;
 }
 
+//=============================================================================================================
+
+std::string CommandLineOptionsParser::getHelpDescription() const
+{
+
+    size_t colWidth(getMaxSizeofFlagsString(6) + 5);
+
+    std::string s("Options:\n");
+    for(const auto& opt: m_options)
+    {
+        std::string flags(getFlagsAsString(opt));
+        s += flags + std::string(colWidth - flags.size(),' ');
+
+        for(auto it = opt.helpStr.begin(); it != opt.helpStr.end(); ++it)
+        {
+            if(it == opt.helpStr.begin())
+            {
+                s += *it + "\n";
+            } else {
+                s += std::string(colWidth, ' ') + *it + "\n";
+            }
+        }
+    }
+    s += "\n";
+    return s;
+}
+
+std::string CommandLineOptionsParser::getFlagsAsString(const CommandLineOption& opt) const
+{
+    std::string concatFlags;
+    for(auto flag = opt.flagsList.begin(); flag != opt.flagsList.end(); ++flag)
+    {
+        if (flag == opt.flagsList.begin())
+        {
+            concatFlags += *flag;
+        } else {
+            concatFlags += ", " + *flag;
+        }
+
+    }
+    return concatFlags;
+}
+
+size_t CommandLineOptionsParser::getMaxSizeofFlagsString(int minSize) const
+{
+    size_t maxFlagStringSize(minSize);
+    for(const auto& opt: m_options)
+    {
+        size_t fSize(getFlagsAsString(opt).size());
+        if( maxFlagStringSize < fSize )
+        {
+            maxFlagStringSize = fSize;
+        }
+    }
+    return maxFlagStringSize;
+}

@@ -74,8 +74,9 @@ int main(int argc, char* argv[])
 
     CORELIB::CommandLineOptionsParser parser;
 
-    parser.addOption("help",{"-h","--h","--help","/h","/help"}, "Display this help.");
-    parser.addOption("input",{"-i","--input"}, "Input file.", CORELIB::CommandLineOptionType::withValue);
+    parser.addOption("help",{"-h","--h","--help","/h","/help"}, {"Display this help.", "this is the second line"});
+    parser.addOption("input",{"-i","--input"}, {"Input file.","This is a second line with a lot of info."}, CORELIB::CommandLineOptionType::withValue);
+    parser.addOption("newOne",{"~wow","~w"},{"This is when your wowed","The following line"});
     parser.parse(argc, argv);
 
     if(parser.isSet("help"))
@@ -88,11 +89,18 @@ int main(int argc, char* argv[])
     if(parser.isSet("input"))
     {
         std::cout << "inputfile!!\n";
-        std::cout << "input file: " << parser.value("input");
+        std::cout << "input file: " << parser.value("input") << "\n";
     } else {
         std::cout << "no inputfile!!\n";
     }
 
+    if(parser.isSet("newOne"))
+    {
+        std::cout << "woooow!\n";
+    }
+
+    std::cout << "\nDescription: --> \n\n";
+    std::cout << parser.getHelpDescription();
 
     return osReturnValue;
 }

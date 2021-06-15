@@ -96,11 +96,11 @@ public:
 
     void addOption(std::string&& name,
                    std::vector<std::string>&& flags,
-                   std::string&& helpLine);
+                   std::vector<std::string>&& helpLine);
 
     void addOption(std::string&& name,
                    std::vector<std::string>&& flags,
-                   std::string&& helpLine,
+                   std::vector<std::string>&& helpLine,
                    CommandLineOptionType&& type);
 
     void addOption(const CommandLineOption& opt);
@@ -114,14 +114,29 @@ public:
     bool isSet(const std::string& opt) const;
     const std::string& value(const std::string& opt) const;
 
-private:
+    std::string getHelpDescription() const;
 
-    bool optionExists(const std::string& optionName) const;
-    std::optional<std::string> flagExists(const std::string& inputFlag);
+private:
+    struct searchResult
+    {
+        searchResult(bool b,size_t pos)
+        : exists(b), position(pos)
+        {}
+        bool exists;
+        size_t  position;
+    };
+
+    searchResult optionSearch(const std::string& optionName) const;
+
+    searchResult flagSearch(const std::string& inputFlag) const;
+
+    std::string getFlagsAsString(const CommandLineOption& opt) const;
+
+    size_t getMaxSizeofFlagsString(int minSize) const;
 
     bool m_bOptionsParsedCorrectly;             /**<State variable to check if all options have been correctly parsed>.*/
     bool m_bStopOnErrors;
-    std::map<std::string, CommandLineOption> m_options;
+    std::vector<CommandLineOption> m_options;
 };
 
 } // CORELIB namespace

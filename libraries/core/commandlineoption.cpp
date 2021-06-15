@@ -40,26 +40,26 @@
 using namespace CORELIB;
 
 CommandLineOption::CommandLineOption()
-: CommandLineOption("", {})
+: CommandLineOption({}, {})
 {
 }
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags)
-: CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue)
+: CommandLineOption(name, flags, {}, CommandLineOptionType::withoutValue)
 {
 }
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags,
-                  const std::string& helpLine)
+                  const std::vector<std::string>& helpLine)
 : CommandLineOption(name, flags, helpLine, CommandLineOptionType::withoutValue)
 {
 }
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags,
-                  const std::string& helpLine,
+                  const std::vector<std::string>& helpLine,
                   CommandLineOptionType type)
 : name(name),
   flagsList(flags),

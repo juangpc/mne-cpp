@@ -55,16 +55,16 @@ struct CORESHARED_EXPORT CommandLineOption
 
     CommandLineOption(const std::string& name,
                       const std::vector<std::string>& flags,
-                      const std::string& helpLine);
+                      const std::vector<std::string>& helpLine);
 
     CommandLineOption(const std::string& name,
-                  const std::vector<std::string>& flags,
-                  const std::string& helpLine,
-                  CommandLineOptionType type);
+                      const std::vector<std::string>& flags,
+                      const std::vector<std::string>& helpLine,
+                      CommandLineOptionType type);
 
     CommandLineOption(std::string&& name,
                       std::vector<std::string>&& flags,
-                      std::string&& helpLine,
+                      std::vector<std::string>&& helpLine,
                       CommandLineOptionType&& type);
 
     CommandLineOption(const CommandLineOption& opt);
@@ -73,7 +73,7 @@ struct CORESHARED_EXPORT CommandLineOption
 
     std::string name;
     std::vector<std::string> flagsList;
-    std::string helpStr;
+    std::vector<std::string> helpStr;
     CommandLineOptionType type;
     bool isSet;
     std::string value;
