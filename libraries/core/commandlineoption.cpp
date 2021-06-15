@@ -33,6 +33,7 @@
  */
 
 #include <utility>
+#include <iostream>
 
 #include "commandlineoption.h"
 
@@ -45,40 +46,37 @@ CommandLineOption::CommandLineOption()
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags)
-: CommandLineOption(name, flags, CommandLineOptionType::withoutValue, "")
+: CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue)
 {
 }
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags,
+                  const std::string& helpLine)
+: CommandLineOption(name, flags, helpLine, CommandLineOptionType::withoutValue)
+{
+}
+
+CommandLineOption::CommandLineOption(const std::string& name,
+                  const std::vector<std::string>& flags,
+                  const std::string& helpLine,
                   CommandLineOptionType type)
-: CommandLineOption(name, flags, type, "")
-{
-}
-
-CommandLineOption::CommandLineOption(const std::string& name,
-                  const std::vector<std::string>& flags,
-                  CommandLineOptionType type,
-                  const std::string& help)
 : name(name),
   flagsList(flags),
+  helpStr(helpLine),
   type(type),
-  helpStr(help),
   isSet(false),
   value("")
 {
 }
 
-CommandLineOption::CommandLineOption(const std::string&& name,
-                  const std::vector<std::string>&& flags,
-                  CommandLineOptionType type,
-                  const std::string&& help)
-: name(std::move(name)),
-  flagsList(std::move(flags)),
-  type(type),
-  helpStr(std::move(help)),
-  isSet(false),
-  value("")
+CommandLineOption::CommandLineOption(const CommandLineOption& opt)
+: name(opt.name),
+flagsList(opt.flagsList),
+helpStr(opt.helpStr),
+type(opt.type),
+isSet(opt.isSet),
+value(opt.value)
 {
 }
 

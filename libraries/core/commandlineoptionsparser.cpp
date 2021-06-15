@@ -33,6 +33,7 @@
  */
 #include <iostream>
 #include <functional>
+#include <utility>
 
 #include "commandlineoptionsparser.h"
 
@@ -73,6 +74,28 @@ bool CommandLineOptionsParser::allOptionsParsedCorrectly() const
 
 //=============================================================================================================
 
+
+void CommandLineOptionsParser::addOption(std::string&& name,
+                                         std::vector<std::string>&& flags)
+{
+    m_options.emplace(name, CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue));
+}
+
+void CommandLineOptionsParser::addOption(std::string&& name,
+                                         std::vector<std::string>&& flags,
+                                         std::string&& helpLine)
+{
+    m_options.emplace(name, CommandLineOption(name, flags, "", CommandLineOptionType::withoutValue));
+}
+
+void CommandLineOptionsParser::addOption(std::string&& name,
+                                         std::vector<std::string>&& flags,
+                                         std::string&& helpLine,
+                                         CommandLineOptionType&& type)
+{
+    m_options.emplace(name, CommandLineOption(name, flags, helpLine, type));
+}
+
 void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 {
     m_options[opt.name] = opt;
@@ -88,7 +111,7 @@ void CommandLineOptionsParser::parse(int argc, char** argv)
         std::string inputflag(argv[i]);
         if(auto optionName = flagExists(inputflag))
         {
-            auto opt = m_options[*optionName];
+            auto& opt = m_options[*optionName];
             opt.isSet = true;
             if (opt.type == CommandLineOptionType::withValue)
             {

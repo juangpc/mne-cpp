@@ -91,6 +91,18 @@ public:
 
     void parse(int argc, char** argv);
 
+    void addOption(std::string&& name,
+                   std::vector<std::string>&& flags);
+
+    void addOption(std::string&& name,
+                   std::vector<std::string>&& flags,
+                   std::string&& helpLine);
+
+    void addOption(std::string&& name,
+                   std::vector<std::string>&& flags,
+                   std::string&& helpLine,
+                   CommandLineOptionType&& type);
+
     void addOption(const CommandLineOption& opt);
 
     void clear();

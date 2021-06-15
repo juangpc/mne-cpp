@@ -26,11 +26,11 @@ contains(MNECPP_CONFIG, static) {
 }
 
 LIBS += -L$${MNE_LIBRARY_DIR}
-#CONFIG(debug, debug|release) {
-#    LIBS += -lmnecppUtilsd \
-#} else {
-#    LIBS += -lmnecppUtils \
-#}
+CONFIG(debug, debug|release) {
+    LIBS +=
+} else {
+    LIBS +=
+}
 
 SOURCES += \
     commandlineoption.cpp \

@@ -69,13 +69,30 @@ using namespace MNEVIRTUALMEEG;
  */
 int main(int argc, char* argv[])
 {
-    std::cout << "Hello!\n";
-//    int osReturnValue(qtApp->exec());
+    //int osReturnValue(qtApp->exec());
     int osReturnValue(0);
-    std::cout << "Hello world!" << "\n";
+
     CORELIB::CommandLineOptionsParser parser;
 
+    parser.addOption("help",{"-h","--h","--help","/h","/help"}, "Display this help.");
+    parser.addOption("input",{"-i","--input"}, "Input file.", CORELIB::CommandLineOptionType::withValue);
     parser.parse(argc, argv);
+
+    if(parser.isSet("help"))
+    {
+        std::cout << "help!!\n";
+    } else {
+        std::cout << "no help!!\n";
+    }
+
+    if(parser.isSet("input"))
+    {
+        std::cout << "inputfile!!\n";
+        std::cout << "input file: " << parser.value("input");
+    } else {
+        std::cout << "no inputfile!!\n";
+    }
+
 
     return osReturnValue;
 }
