@@ -52,6 +52,10 @@ SUBDIRS += \
     SUBDIRS += testframes
 }
 
+contains(MNECPP_CONFIG, benchmarks) {
+    SUBDIRS += benchmarks
+}
+
 # Overwrite SUBDIRS if wasm flag was defined
 contains(MNECPP_CONFIG, wasm) {
     SUBDIRS = \
