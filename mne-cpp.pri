@@ -30,7 +30,7 @@ VERSION = 0.1.9
 
 QMAKE_TARGET_PRODUCT = MNE-CPP
 QMAKE_TARGET_DESCRIPTION = A Framework for Electrophysiology.
-QMAKE_TARGET_COPYRIGHT = Copyright (C) 2020 Authors of MNE-CPP. All rights reserved.
+QMAKE_TARGET_COPYRIGHT = Copyright (C) 2021 Authors of MNE-CPP. All rights reserved.
 
 ########################################### PROJECT CONFIGURATION #############################################
 
