@@ -2,7 +2,7 @@
 #
 # @file     fourier.pro
 # @author   Juan GPC <jgarciaprieto@mgh.harvard.edu>
-# @since    0.1.0
+# @since    0.1.9
 # @date     July, 2021
 #
 # @section  LICENSE
