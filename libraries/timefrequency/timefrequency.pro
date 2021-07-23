@@ -58,10 +58,11 @@ contains(MNECPP_CONFIG, static) {
 }
 
 SOURCES += \
+    trashy2.cpp
 
 HEADERS += \
     timefrequency_global.h \
-    trash.h
+    trashy2.h
 
 
 INCLUDEPATH += $${EIGEN_INCLUDE_DIR}

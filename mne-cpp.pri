@@ -56,7 +56,7 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2021 Authors of MNE-CPP. All rights reser
 
 
 # Default flags
-MNECPP_CONFIG += benchmarks
+MNECPP_CONFIG +=
 
 # Define c++ version
 CONFIG += c++14

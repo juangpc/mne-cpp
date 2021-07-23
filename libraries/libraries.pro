@@ -51,7 +51,7 @@ SUBDIRS += \
     rtprocessing \
     connectivity \
     disp \
-    timefrequency
+    timefrequency \
 
     qtHaveModule(charts) {
         # The Qt3D module is not yet Wasm supported
