@@ -1,14 +1,13 @@
 //=============================================================================================================
 /**
- * @file     utils_global.h
- * @author   Lorenz Esch <lesch@mgh.harvard.edu>;
- *           Christoph Dinh <chdinh@nmr.mgh.harvard.edu>
- * @since    0.1.0
- * @date     July, 2012
+ * @file     timefrequency_global.h
+ * @author   Juan GPC <jgarciaprieto@mgh.harvard.edu>
+ * @since    0.1.9
+ * @date     July, 2021
  *
  * @section  LICENSE
  *
- * Copyright (C) 2012, Lorenz Esch, Christoph Dinh. All rights reserved.
+ * Copyright (C) 2021, Juan GPC. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that
  * the following conditions are met:
@@ -29,12 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  *
- * @brief    utils library export/import macros.
+ * @brief    timefrequency library export/import macros.
  *
  */
 
-#ifndef UTILS_GLOBAL_H
-#define UTILS_GLOBAL_H
+#ifndef TIMEFREQUENCY_GLOBAL_H
+#define TIMEFREQUENCY_GLOBAL_H
 
 //=============================================================================================================
 // QT INCLUDES
@@ -47,11 +46,11 @@
 //=============================================================================================================
 
 #if defined(STATICBUILD)
-#  define UTILSSHARED_EXPORT
-#elif defined(UTILS_LIBRARY)
-#  define UTILSSHARED_EXPORT Q_DECL_EXPORT    /**< Q_DECL_EXPORT must be added to the declarations of symbols used when compiling a shared library. */
+#  define TIMEFREQUENCYSHARED_EXPORT
+#elif defined(TIMEFREQUENCY_LIBRARY)
+#  define TIMEFREQUENCYSHARED_EXPORT Q_DECL_EXPORT    /**< Q_DECL_EXPORT must be added to the declarations of symbols used when compiling a shared library. */
 #else
-#  define UTILSSHARED_EXPORT Q_DECL_IMPORT    /**< Q_DECL_IMPORT must be added to the declarations of symbols used when compiling a client that uses the shared library. */
+#  define TIMEFREQUENCYSHARED_EXPORT Q_DECL_IMPORT    /**< Q_DECL_IMPORT must be added to the declarations of symbols used when compiling a client that uses the shared library. */
 #endif
 
-#endif // UTILS_GLOBAL_H
+#endif // TIMEFREQUENCY_GLOBAL_H

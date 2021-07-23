@@ -37,4 +37,4 @@ include(../mne-cpp.pri)
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    fourier \
+    #fourier \

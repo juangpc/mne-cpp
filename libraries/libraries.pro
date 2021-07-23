@@ -51,6 +51,7 @@ SUBDIRS += \
     rtprocessing \
     connectivity \
     disp \
+    timefrequency
 
     qtHaveModule(charts) {
         # The Qt3D module is not yet Wasm supported
@@ -62,6 +63,7 @@ SUBDIRS += \
     }
 
 # Specify library dependencies
+timefrequency.depens =
 utils.depends =
 fs.depends = utils
 fiff.depends = utils
