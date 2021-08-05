@@ -52,8 +52,8 @@ using namespace CORELIB;
 //=============================================================================================================
 
 CommandLineOptionsParser::CommandLineOptionsParser()
-: m_bOptionsParsedCorrectly(false),
-m_bStopOnErrors(true)
+: m_bOptionsParsedCorrectly(false)
+, m_bStopOnErrors(true)
 {
     clear();
 }
@@ -75,26 +75,32 @@ bool CommandLineOptionsParser::allOptionsParsedCorrectly() const
 //=============================================================================================================
 
 
-void CommandLineOptionsParser::addOption(std::string&& name,
-                                         std::vector<std::string>&& flags)
+void CommandLineOptionsParser::addOption(const std::string& name,
+                                         const std::vector<std::string>& flags)
 {
     m_options.emplace_back(name, flags);
 }
 
-void CommandLineOptionsParser::addOption(std::string&& name,
-                                         std::vector<std::string>&& flags,
-                                         std::vector<std::string>&& helpLine)
+//=============================================================================================================
+
+void CommandLineOptionsParser::addOption(const std::string& name,
+                                         const std::vector<std::string>& flags,
+                                         const std::vector<std::string>& helpLine)
 {
     m_options.emplace_back(name, flags, helpLine, CommandLineOptionType::withoutValue);
 }
 
-void CommandLineOptionsParser::addOption(std::string&& name,
-                                         std::vector<std::string>&& flags,
-                                         std::vector<std::string>&& helpLine,
-                                         CommandLineOptionType&& type)
+//=============================================================================================================
+
+void CommandLineOptionsParser::addOption(const std::string& name,
+                                         const std::vector<std::string>& flags,
+                                         const std::vector<std::string>& helpLine,
+                                         const CommandLineOptionType& type)
 {
     m_options.emplace_back(name, flags, helpLine, type);
 }
+
+//=============================================================================================================
 
 void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 {
@@ -222,6 +228,8 @@ std::string CommandLineOptionsParser::getHelpDescription() const
     return s;
 }
 
+//=============================================================================================================
+
 std::string CommandLineOptionsParser::getFlagsAsString(const CommandLineOption& opt) const
 {
     std::string concatFlags;
@@ -238,7 +246,9 @@ std::string CommandLineOptionsParser::getFlagsAsString(const CommandLineOption& 
     return concatFlags;
 }
 
-size_t CommandLineOptionsParser::getMaxSizeofFlagsString(int minSize) const
+//=============================================================================================================
+
+int CommandLineOptionsParser::getMaxSizeofFlagsString(int minSize) const
 {
     size_t maxFlagStringSize(minSize);
     for(const auto& opt: m_options)

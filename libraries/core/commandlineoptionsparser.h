@@ -59,9 +59,7 @@ namespace CORELIB {
 // FORWARD DECLARATIONS
 //=============================================================================================================
 
-
-
-struct CommandLineOption;
+class CommandLineOption;
 
 //=============================================================================================================
 /**
@@ -89,54 +87,157 @@ public:
      */
     bool allOptionsParsedCorrectly() const;
 
+    //=========================================================================================================
+    /**
+     *
+     * Go through all the input arguments and parse the options previously added to the parser.
+     *
+     */
     void parse(int argc, char** argv);
 
-    void addOption(std::string&& name,
-                   std::vector<std::string>&& flags);
+    //=========================================================================================================
+    /**
+     *
+     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
+     * in the command line by the user of the application. And Specify a helpline of text to be included in a
+     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
+     *
+     */
+    void addOption(const std::string& name,
+                   const std::vector<std::string>& flags);
 
-    void addOption(std::string&& name,
-                   std::vector<std::string>&& flags,
-                   std::vector<std::string>&& helpLine);
+    //=========================================================================================================
+    /**
+     *
+     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
+     * in the command line by the user of the application. And Specify a helpline of text to be included in a
+     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
+     *
+     */
+    void addOption(const std::string& name,
+                   const std::vector<std::string>& flags,
+                   const std::vector<std::string>& helpLine);
 
-    void addOption(std::string&& name,
-                   std::vector<std::string>&& flags,
-                   std::vector<std::string>&& helpLine,
-                   CommandLineOptionType&& type);
+    //=========================================================================================================
+    /**
+     *
+     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
+     * in the command line by the user of the application. And Specify a helpline of text to be included in a
+     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
+     *
+     */
+    void addOption(const std::string& name,
+                   const std::vector<std::string>& flags,
+                   const std::vector<std::string>& helpLine,
+                   const CommandLineOptionType& type);
 
+    //=========================================================================================================
+    /**
+     *
+     * Overloaded method to add an option to the parser. You can add an option already created and configured
+     *
+     */
     void addOption(const CommandLineOption& opt);
 
+    //=========================================================================================================
+    /**
+     *
+     * Clear the parser of previously added options.
+     *
+     */
     void clear();
 
+    //=========================================================================================================
+    /**
+     *
+     * Specify whether the parser should stop the application when an unknown option has been used.
+     *
+     */
     void setStopOnErrors(bool s);
 
+    //=========================================================================================================
+    /**
+     *
+     * Retrieve if the current parser will stop on error or not.
+     *
+     */
     bool stopOnErrors() const;
 
+    //=========================================================================================================
+    /**
+     *
+     * Check whether an option has been introduced by the user.
+     *
+     */
     bool isSet(const std::string& opt) const;
+
+    //=========================================================================================================
+    /**
+     *
+     * Check the value of the option given by the user.
+     *
+     */
     const std::string& value(const std::string& opt) const;
 
+    //=========================================================================================================
+    /**
+     *
+     * Get a description text, minimally formatted, with all the command options, and their helper text.
+     *
+     */
     std::string getHelpDescription() const;
 
 private:
+    /**
+     * This is a helper class to organize the results of searching in the vector.
+     */
     struct searchResult
     {
-        searchResult(bool b,size_t pos)
-        : exists(b), position(pos)
+        searchResult(bool b,
+                     size_t pos)
+        : exists(b)
+        , position(pos)
         {}
         bool exists;
         size_t  position;
     };
 
+    //=========================================================================================================
+    /**
+     *
+     * Search the state of an option based on its Name.
+     *
+     */
     searchResult optionSearch(const std::string& optionName) const;
 
+    //=========================================================================================================
+    /**
+     *
+     * Search for an option based on one of its input flags.
+     *
+     */
     searchResult flagSearch(const std::string& inputFlag) const;
 
+    //=========================================================================================================
+    /**
+     *
+     * Get a description text, minimally formatted, with all the command options, and their helper text.
+     *
+     */
     std::string getFlagsAsString(const CommandLineOption& opt) const;
 
-    size_t getMaxSizeofFlagsString(int minSize) const;
+    //=========================================================================================================
+    /**
+     *
+     * Helper function that returns the size of the longest flag string. This helps better format the code in the
+     * helper text <getHelpDescription>"()".
+     *
+     */
+    int getMaxSizeofFlagsString(int minSize) const;
 
-    bool m_bOptionsParsedCorrectly;             /**<State variable to check if all options have been correctly parsed>.*/
-    bool m_bStopOnErrors;
-    std::vector<CommandLineOption> m_options;
+    bool m_bOptionsParsedCorrectly;             /**< State variable to check if all options have been correctly parsed.>*/
+    bool m_bStopOnErrors;                       /**< Stores if the parser will stop when finding an option not previously added.>*/
+    std::vector<CommandLineOption> m_options;   /**< Container of the options to be parsed.>*/
 };
 
 } // CORELIB namespace

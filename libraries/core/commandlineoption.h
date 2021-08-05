@@ -39,44 +39,87 @@
 #include <vector>
 
 namespace CORELIB {
-
+/**
+ * Enumerator class to store if the CommandLineOption is of type with or without value.
+ */
 enum class CommandLineOptionType
 {
     withValue,
     withoutValue
 };
 
-struct CORESHARED_EXPORT CommandLineOption
+/**
+ * This class specifies an option which could be set by the user in an applicaiton and then parsed by the
+ * CommandLineOptionPasrser.
+ *
+ * @brief One possible option to be set by the user.
+ */
+class CORESHARED_EXPORT CommandLineOption
 {
+public:
+    //=========================================================================================================
+    /**
+     *
+     * Default constructor. Creates an empty object.
+     *
+     */
     CommandLineOption();
 
+    //=========================================================================================================
+    /**
+     *
+     * Constructor of an option, given its name, the flags that will set it, the helper line and wether it will be
+     * followed by a value or not.
+     *
+     */
     CommandLineOption(const std::string& name,
                       const std::vector<std::string>& flags);
 
+    //=========================================================================================================
+    /**
+     *
+     * Constructor of an option, given its name, the flags that will set it, the helper line and wether it will be
+     * followed by a value or not.
+     *
+     */
     CommandLineOption(const std::string& name,
                       const std::vector<std::string>& flags,
                       const std::vector<std::string>& helpLine);
 
+    //=========================================================================================================
+    /**
+     *
+     * Constructor of an option, given its name, the flags that will set it, the helper line and wether it will be
+     * followed by a value or not.
+     *
+     */
     CommandLineOption(const std::string& name,
                       const std::vector<std::string>& flags,
                       const std::vector<std::string>& helpLine,
                       CommandLineOptionType type);
 
-    CommandLineOption(std::string&& name,
-                      std::vector<std::string>&& flags,
-                      std::vector<std::string>&& helpLine,
-                      CommandLineOptionType&& type);
-
+    //=========================================================================================================
+    /**
+     *
+     * Copy an option from anotherone.
+     *
+     */
     CommandLineOption(const CommandLineOption& opt);
 
+    //=========================================================================================================
+    /**
+     *
+     * Check if a given flag will set this option.
+     *
+     */
     bool flagContained(const std::string& flag) const;
 
-    std::string name;
-    std::vector<std::string> flagsList;
-    std::vector<std::string> helpStr;
-    CommandLineOptionType type;
-    bool isSet;
-    std::string value;
+    std::string name;                   /**< Name of the option. Serves the developer using the option and it will show in the help.>*/
+    std::vector<std::string> flagsList; /**< List of flags to be used in an application call.>*/
+    std::vector<std::string> helpStr;   /**< Help string for this specific option. It is used to build a Help Description menu.>*/
+    CommandLineOptionType type;         /**< Type of this option. CommandLineOptionType.>*/
+    bool isSet;                         /**< Bool value specifying if the parser has already identified this option as set/used by the user.>*/
+    std::string value;                  /**< If the option has value, the value given by the user will be stored here.>*/
 };
 
 } // namespace CORELIB

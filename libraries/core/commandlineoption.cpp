@@ -35,20 +35,30 @@
 #include <utility>
 #include <iostream>
 
+//=============================================================================================================
+
 #include "commandlineoption.h"
 
+//=============================================================================================================
+
 using namespace CORELIB;
+
+//=============================================================================================================
 
 CommandLineOption::CommandLineOption()
 : CommandLineOption({}, {})
 {
 }
 
+//=============================================================================================================
+
 CommandLineOption::CommandLineOption(const std::string& name,
-                  const std::vector<std::string>& flags)
+                                     const std::vector<std::string>& flags)
 : CommandLineOption(name, flags, {}, CommandLineOptionType::withoutValue)
 {
 }
+
+//=============================================================================================================
 
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags,
@@ -57,28 +67,34 @@ CommandLineOption::CommandLineOption(const std::string& name,
 {
 }
 
+//=============================================================================================================
+
 CommandLineOption::CommandLineOption(const std::string& name,
                   const std::vector<std::string>& flags,
                   const std::vector<std::string>& helpLine,
                   CommandLineOptionType type)
-: name(name),
-  flagsList(flags),
-  helpStr(helpLine),
-  type(type),
-  isSet(false),
-  value("")
+: name(name)
+, flagsList(flags)
+, helpStr(helpLine)
+, type(type)
+, isSet(false)
+, value("")
 {
 }
 
+//=============================================================================================================
+
 CommandLineOption::CommandLineOption(const CommandLineOption& opt)
-: name(opt.name),
-flagsList(opt.flagsList),
-helpStr(opt.helpStr),
-type(opt.type),
-isSet(opt.isSet),
-value(opt.value)
+: name(opt.name)
+, flagsList(opt.flagsList)
+, helpStr(opt.helpStr)
+, type(opt.type)
+, isSet(opt.isSet)
+, value(opt.value)
 {
 }
+
+//=============================================================================================================
 
 bool CommandLineOption::flagContained(const std::string& flag) const
 {
