@@ -68,19 +68,20 @@ CONFIG(debug, debug|release) {
 
 SOURCES += \
     commandlineoption.cpp \
-    commandlineoptionsparser.cpp
+    commandlineoptionsparser.cpp \
 
 HEADERS += \
     commandlineoption.h \
     commandlineoptionsparser.h \
-    core_global.h
+    core_global.h \
 
 INCLUDEPATH += $${MNE_INCLUDE_DIR}
 
 header_files.files = $${HEADERS}
 header_files.path = $${MNE_INSTALL_INCLUDE_DIR}/core
 
-INSTALLS += header_files
+INSTALLS += \
+            header_files \
 
 contains(MNECPP_CONFIG, withCodeCov) {
     QMAKE_CXXFLAGS += --coverage
