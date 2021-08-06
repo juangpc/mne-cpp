@@ -98,9 +98,9 @@ CommandLineOption::CommandLineOption(const CommandLineOption& opt)
 
 bool CommandLineOption::flagContained(const std::string& flag) const
 {
-    for ( auto flagsIt = flagsList.begin(); flagsIt != flagsList.end(); ++flagsIt)
+    for (const auto& s: flagsList)
     {
-        if (*flagsIt == flag)
+        if (s == flag)
         {
             return true;
         }
