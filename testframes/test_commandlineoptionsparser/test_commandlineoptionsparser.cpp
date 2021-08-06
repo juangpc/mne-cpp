@@ -61,6 +61,8 @@ public:
 private slots:
     void initTestCase();
 
+    //test CommandLineOption
+    void testCommandLineOptionType();
 
     void cleanupTestCase();
 
@@ -74,6 +76,14 @@ void TestCommandLineOptions::initTestCase()
     qInstallMessageHandler(UTILSLIB::ApplicationLogger::customLogWriter);
 }
 
+//=============================================================================================================
+
+void TestCommandLineOptions::testCommandLineOptionType()
+{
+    CORELIB::CommandLineOptionType option = CORELIB::CommandLineOptionType::withValue;
+
+}
+
 void TestCommandLineOptions::cleanupTestCase()
 {
 
@@ -82,3 +92,5 @@ void TestCommandLineOptions::cleanupTestCase()
 //=============================================================================================================
 // MAIN
 //=============================================================================================================
+
+QTEST_GUILESS_MAIN(TestCommandLineOptions)
