@@ -1,6 +1,6 @@
 #==============================================================================================================
 #
-# @file     testframes.pro
+# @file     tests.pro
 # @author   Lars Debor <Lars.Debor@tu-ilmenau.de>;
 #           Christoph Dinh <chdinh@nmr.mgh.harvard.edu>;
 #           Ruben Doerfel <Ruben.Doerfel@tu-ilmenau.de>;

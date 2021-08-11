@@ -49,7 +49,7 @@ SUBDIRS += \
 }
 
 !contains(MNECPP_CONFIG, noTests) {
-    SUBDIRS += testframes
+    SUBDIRS += tests
 }
 
 # Overwrite SUBDIRS if wasm flag was defined
@@ -63,5 +63,5 @@ contains(MNECPP_CONFIG, wasm) {
 libraries.depends =
 applications.depends = libraries
 examples.depends = libraries
-testframes.depends = libraries
+tests.depends = libraries
 
