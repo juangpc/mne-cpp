@@ -60,6 +60,22 @@ CommandLineOptionsParser::CommandLineOptionsParser()
 
 //=============================================================================================================
 
+CommandLineOptionsParser::CommandLineOptionsParser(const CommandLineOption& opt)
+: CommandLineOptionsParser()
+{
+    addOption(opt);
+}
+
+//=============================================================================================================
+
+CommandLineOptionsParser::CommandLineOptionsParser(std::initializer_list<CommandLineOption> optList)
+: CommandLineOptionsParser()
+{
+    addOptions(optList);
+}
+
+//=============================================================================================================
+
 void CommandLineOptionsParser::clear()
 {
     m_options.clear();
@@ -74,37 +90,19 @@ bool CommandLineOptionsParser::allOptionsParsedCorrectly() const
 
 //=============================================================================================================
 
-
-void CommandLineOptionsParser::addOption(const std::string& name,
-                                         const std::vector<std::string>& flags)
-{
-    m_options.emplace_back(name, flags);
-}
-
-//=============================================================================================================
-
-void CommandLineOptionsParser::addOption(const std::string& name,
-                                         const std::vector<std::string>& flags,
-                                         const std::vector<std::string>& helpLine)
-{
-    m_options.emplace_back(name, flags, helpLine, CommandLineOptionType::withoutValue);
-}
-
-//=============================================================================================================
-
-void CommandLineOptionsParser::addOption(const std::string& name,
-                                         const std::vector<std::string>& flags,
-                                         const std::vector<std::string>& helpLine,
-                                         const CommandLineOptionType& type)
-{
-    m_options.emplace_back(name, flags, helpLine, type);
-}
-
-//=============================================================================================================
-
 void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 {
     m_options.push_back(opt);
+}
+
+//=============================================================================================================
+
+void CommandLineOptionsParser::addOptions(std::initializer_list<CommandLineOption> optList)
+{
+    for( auto opt : optList)
+    {
+        m_options.push_back(opt);
+    }
 }
 
 //=============================================================================================================

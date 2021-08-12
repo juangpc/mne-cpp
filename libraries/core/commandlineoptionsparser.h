@@ -82,6 +82,22 @@ public:
     //=========================================================================================================
     /**
      *
+     * Class constructor already adding an option to the options list.
+     *
+     */
+    CommandLineOptionsParser(const CommandLineOption& opt);
+
+    //=========================================================================================================
+    /**
+     *
+     * Class constructor which adds a list of options to the options list.
+     *
+     */
+    CommandLineOptionsParser(std::initializer_list<CommandLineOption> optList);
+
+    //=========================================================================================================
+    /**
+     *
      * @brief Check if all options have been correctly parsed.
      *
      */
@@ -104,6 +120,16 @@ public:
      *
      */
     void addOption(const CommandLineOption& opt);
+
+    //=========================================================================================================
+    /**
+     *
+     * Define the name, the characters or flags, to be identified in the command line by the user of the
+     * application. And Specify a helpline of text to be included in a automatically generated help menu.
+     * Specify the type of option {with value or without value (default)}.
+     *
+     */
+    void addOptions(std::initializer_list<CommandLineOption> optList);
 
     //=========================================================================================================
     /**
