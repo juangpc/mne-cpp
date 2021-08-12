@@ -134,7 +134,12 @@ void TestCommandLineOptionsParser::testOptionsParser()
     CORELIB::CommandLineOption option3("newOne",{"~wow","~w"},{"This is when your wowed","The following line"});
     auto list = {option1, option2, option3};
 
+    auto argc(3);
+    char* argv[] = {const_cast<char*> ("bla"),
+                    const_cast<char*> ("--input"),
+                    const_cast<char*> ("blu.txt")};
     CORELIB::CommandLineOptionsParser parser(list);
+    parser.parse(argc, argv );
 }
 
 //=============================================================================================================
