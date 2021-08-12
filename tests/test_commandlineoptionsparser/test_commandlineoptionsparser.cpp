@@ -43,21 +43,22 @@
 #include "core/commandlineoption.h"
 #include "core/commandlineoptionsparser.h"
 
+#include <QtCore/QCoreApplication>
 #include <QTest>
 
 //=============================================================================================================
 /**
- * DECLARE CLASS TestCommandLineOptions
+ * DECLARE CLASS TestCommandLineOptionsParser
  *
  * Provides CommandLineParser verification tests.
  *
  */
-class TestCommandLineOptions: public QObject
+class TestCommandLineOptionsParser: public QObject
 {
     Q_OBJECT
 
 public:
-    TestCommandLineOptions() = default;
+    TestCommandLineOptionsParser() = default;
 
 private slots:
     void initTestCase();
@@ -72,21 +73,21 @@ private slots:
 
 //=============================================================================================================
 
-void TestCommandLineOptions::initTestCase()
+void TestCommandLineOptionsParser::initTestCase()
 {
     qInstallMessageHandler(UTILSLIB::ApplicationLogger::customLogWriter);
 }
 
 //=============================================================================================================
 
-void TestCommandLineOptions::cleanupTestCase()
+void TestCommandLineOptionsParser::cleanupTestCase()
 {
 
 }
 
 //=============================================================================================================
 
-void TestCommandLineOptions::testCommandLineOptionType()
+void TestCommandLineOptionsParser::testCommandLineOptionType()
 {
     auto option = CORELIB::CommandLineOptionType::withValue;
     QVERIFY(static_cast<int>(option) == 0);
@@ -99,4 +100,5 @@ void TestCommandLineOptions::testCommandLineOptionType()
 // MAIN
 //=============================================================================================================
 
-QTEST_GUILESS_MAIN(TestCommandLineOptions)
+QTEST_GUILESS_MAIN(TestCommandLineOptionsParser)
+//#include "test_commandlineoptionsparser.moc"

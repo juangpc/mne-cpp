@@ -58,13 +58,15 @@ contains(MNECPP_CONFIG, static) {
 
 LIBS += -L$${MNE_LIBRARY_DIR}
 CONFIG(debug, debug|release) {
-    LIBS += -lmnecppCored\
+    LIBS += -lmnecppCored \
+            -lmnecppUtilsd \
 } else {
-    LIBS += -lmnecppCore\
+    LIBS += -lmnecppCore \
+            -lmnecppUtils \
 }
 
 SOURCES += \
-    test_commandlineoptionsparser.cpp \
+    test_commandlineoptionsparser.cpp
 #    ../../libraries/core/commandlineoption.cpp \
 #    ../../libraries/core/commandlineoptionsparser.cpp \
 

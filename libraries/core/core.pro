@@ -37,7 +37,7 @@ include(../../mne-cpp.pri)
 TEMPLATE = lib
 
 CONFIG += skip_target_version_ext
-CONFIG += c++17
+#CONFIG += c++17
 
 QT += network concurrent
 QT -= gui
@@ -59,29 +59,24 @@ contains(MNECPP_CONFIG, static) {
     CONFIG += shared
 }
 
-LIBS += -L$${MNE_LIBRARY_DIR}
-CONFIG(debug, debug|release) {
-    LIBS +=
-} else {
-    LIBS +=
-}
+#LIBS += -L$${MNE_LIBRARY_DIR}
+#CONFIG(debug, debug|release) {
+#    LIBS +=
+#} else {
+#    LIBS +=
+#}
 
 SOURCES += \
     commandlineoption.cpp \
-    commandlineoptionsparser.cpp \
+    commandlineoptionsparser.cpp
 
 HEADERS += \
     commandlineoption.h \
     commandlineoptionsparser.h \
-    core_global.h \
+    core_global.h
 
+INCLUDEPATH += $${EIGEN_INCLUDE_DIR}
 INCLUDEPATH += $${MNE_INCLUDE_DIR}
-
-header_files.files = $${HEADERS}
-header_files.path = $${MNE_INSTALL_INCLUDE_DIR}/core
-
-INSTALLS += \
-            header_files \
 
 contains(MNECPP_CONFIG, withCodeCov) {
     QMAKE_CXXFLAGS += --coverage
@@ -94,4 +89,24 @@ win32:!contains(MNECPP_CONFIG, static) {
 
 macx {
     QMAKE_LFLAGS_SONAME = -Wl,-install_name,@rpath/
+}
+
+# Activate FFTW backend in Eigen for non-static builds only
+contains(MNECPP_CONFIG, useFFTW):!contains(MNECPP_CONFIG, static) {
+    DEFINES += EIGEN_FFTW_DEFAULT
+    INCLUDEPATH += $$shell_path($${FFTW_DIR_INCLUDE})
+    LIBS += -L$$shell_path($${FFTW_DIR_LIBS})
+
+    win32 {
+        # On Windows
+        LIBS += -llibfftw3-3 \
+                -llibfftw3f-3 \
+                -llibfftw3l-3 \
+    }
+
+    unix:!macx {
+        # On Linux
+        LIBS += -lfftw3 \
+                -lfftw3_threads \
+    }
 }

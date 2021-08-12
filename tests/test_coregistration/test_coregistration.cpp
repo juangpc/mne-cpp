@@ -97,7 +97,6 @@ private slots:
 
 private:
     // declare your thresholds, variables and error values here
-    double dEpsilon;
     FiffCoordTrans transFitMatched;
     FiffCoordTrans transPerformICP;
     FiffCoordTrans transFitMatchedRef;
