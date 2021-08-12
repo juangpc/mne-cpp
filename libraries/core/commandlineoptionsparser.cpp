@@ -202,13 +202,7 @@ bool CommandLineOptionsParser::isSet(const std::string& optionName) const
 
 const std::string& CommandLineOptionsParser::value(const std::string& optionName) const
 {
-    searchResult result(optionSearch(optionName));
-    if (result.exists)
-    {
-        return m_options[result.position].value;
-    } else {
-        return ;
-    }
+    return m_options[optionSearch(optionName).position].value;
 }
 
 //=============================================================================================================
