@@ -36,11 +36,12 @@
 //=============================================================================================================
 // INCLUDES
 //=============================================================================================================
+
 #include <utils/generics/applicationlogger.h>
 
-#include "../libraries/core/core_global.h"
-#include "../libraries/core/commandlineoption.h"
-#include "../libraries/core/commandlineoptionsparser.h"
+#include "core/core_global.h"
+#include "core/commandlineoption.h"
+#include "core/commandlineoptionsparser.h"
 
 #include <QTest>
 
@@ -63,9 +64,9 @@ private slots:
 
     //test CommandLineOption
     void testCommandLineOptionType();
+//    void testCommandLineOption
 
     void cleanupTestCase();
-
 
 };
 
@@ -78,14 +79,19 @@ void TestCommandLineOptions::initTestCase()
 
 //=============================================================================================================
 
-void TestCommandLineOptions::testCommandLineOptionType()
+void TestCommandLineOptions::cleanupTestCase()
 {
-    CORELIB::CommandLineOptionType option = CORELIB::CommandLineOptionType::withValue;
 
 }
 
-void TestCommandLineOptions::cleanupTestCase()
+//=============================================================================================================
+
+void TestCommandLineOptions::testCommandLineOptionType()
 {
+    auto option = CORELIB::CommandLineOptionType::withValue;
+    QVERIFY(static_cast<int>(option) == 0);
+    option = CORELIB::CommandLineOptionType::withoutValue;
+    QVERIFY(static_cast<int>(option) == 1);
 
 }
 

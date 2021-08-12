@@ -36,7 +36,7 @@ include(../../mne-cpp.pri)
 
 TEMPLATE = app
 
-QT += testlib
+QT += testlib concurrent network
 QT -= gui
 
 CONFIG += console
@@ -65,12 +65,12 @@ CONFIG(debug, debug|release) {
 
 SOURCES += \
     test_commandlineoptionsparser.cpp \
-    ../../libraries/core/commandlineoption.cpp \
-    ../../libraries/core/commandlineoptionsparser.cpp \
+#    ../../libraries/core/commandlineoption.cpp \
+#    ../../libraries/core/commandlineoptionsparser.cpp \
 
-HEADERS  += \
-    ../../libraries/core/commandlineoption.h \
-    ../../libraries/core/commandlineoptionsparser.h \
+#HEADERS  += \
+#    ../../libraries/core/commandlineoption.h \
+#    ../../libraries/core/commandlineoptionsparser.h \
 
 INCLUDEPATH += $${EIGEN_INCLUDE_DIR}
 INCLUDEPATH += $${MNE_INCLUDE_DIR}
