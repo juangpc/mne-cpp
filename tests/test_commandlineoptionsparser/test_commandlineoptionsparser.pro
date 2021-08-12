@@ -66,13 +66,9 @@ CONFIG(debug, debug|release) {
 }
 
 SOURCES += \
-    test_commandlineoptionsparser.cpp
-#    ../../libraries/core/commandlineoption.cpp \
-#    ../../libraries/core/commandlineoptionsparser.cpp \
+    test_commandlineoptionsparser.cpp \
 
 #HEADERS  += \
-#    ../../libraries/core/commandlineoption.h \
-#    ../../libraries/core/commandlineoptionsparser.h \
 
 INCLUDEPATH += $${EIGEN_INCLUDE_DIR}
 INCLUDEPATH += $${MNE_INCLUDE_DIR}

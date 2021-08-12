@@ -58,7 +58,7 @@ class TestCommandLineOptionsParser: public QObject
     Q_OBJECT
 
 public:
-    TestCommandLineOptionsParser();
+    TestCommandLineOptionsParser() = default;
 
 private slots:
     void initTestCase();
@@ -71,11 +71,6 @@ private slots:
     void cleanupTestCase();
 
 };
-
-TestCommandLineOptionsParser::TestCommandLineOptionsParser()
-{
-
-}
 
 //=============================================================================================================
 
