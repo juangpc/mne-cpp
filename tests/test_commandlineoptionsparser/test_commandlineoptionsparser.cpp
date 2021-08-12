@@ -129,7 +129,12 @@ void TestCommandLineOptionsParser::testCommandLineOptionConstructors()
 
 void TestCommandLineOptionsParser::testOptionsParser()
 {
+    CORELIB::CommandLineOption option1("help",{"-h","--h","--help","/h","/help"}, {"Display this help.", "this is the second line"});
+    CORELIB::CommandLineOption option2("input",{"-i","--input"}, {"Input file.","This is a second line with a lot of info."}, CORELIB::CommandLineOptionType::withValue);
+    CORELIB::CommandLineOption option3("newOne",{"~wow","~w"},{"This is when your wowed","The following line"});
+    auto list = {option1, option2, option3};
 
+    CORELIB::CommandLineOptionsParser parser(list);
 }
 
 //=============================================================================================================

@@ -99,7 +99,7 @@ void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 
 void CommandLineOptionsParser::addOptions(std::initializer_list<CommandLineOption> optList)
 {
-    for( auto opt : optList)
+    for( const auto& opt : optList)
     {
         m_options.push_back(opt);
     }
