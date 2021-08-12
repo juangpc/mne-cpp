@@ -65,7 +65,7 @@ private slots:
 
     //test CommandLineOption
     void testCommandLineOptionType();
-//    void testCommandLineOption
+    void testCommandLineOptionConstructors();
 
     void cleanupTestCase();
 
@@ -98,8 +98,16 @@ void TestCommandLineOptionsParser::testCommandLineOptionType()
     QVERIFY(static_cast<int>(option) == 0);
     option = CORELIB::CommandLineOptionType::withoutValue;
     QVERIFY(static_cast<int>(option) == 1);
+}
+
+//=============================================================================================================
+
+void TestCommandLineOptionsParser::testCommandLineOptionConstructors()
+{
+    CORELIB::CommandLineOption option;
 
 }
+
 
 //=============================================================================================================
 // MAIN

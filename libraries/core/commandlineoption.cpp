@@ -46,7 +46,7 @@ using namespace CORELIB;
 //=============================================================================================================
 
 CommandLineOption::CommandLineOption()
-: CommandLineOption({}, {})
+: CommandLineOption({}, {}, {}, CommandLineOptionType::withoutValue)
 {
 }
 
