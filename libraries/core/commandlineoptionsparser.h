@@ -225,7 +225,7 @@ private:
      * helper text <getHelpDescription>"()".
      *
      */
-    int getMaxSizeofFlagsString(int minSize) const;
+    size_t getMaxSizeofFlagsString(size_t minSize) const;
 
     bool m_bOptionsParsedCorrectly;             /**< State variable to check if all options have been correctly parsed.>*/
     bool m_bStopOnErrors;                       /**< Stores if the parser will stop when finding an option not previously added.>*/

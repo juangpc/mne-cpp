@@ -150,10 +150,10 @@ CommandLineOptionsParser::searchResult CommandLineOptionsParser::optionSearch(co
     {
         if(m_options[i].name == optName)
         {
-            return searchResult(true,i);
+            return searchResult(true, i);
         }
     }
-    return searchResult(false,0);
+    return searchResult(false, 0);
 }
 
 //=============================================================================================================
@@ -189,14 +189,26 @@ bool CommandLineOptionsParser::stopOnErrors() const
 
 bool CommandLineOptionsParser::isSet(const std::string& optionName) const
 {
-    return m_options[optionSearch(optionName).position].isSet;
+    searchResult result(optionSearch(optionName));
+    if (result.exists)
+    {
+        return m_options[result.position].isSet;
+    } else {
+        return false;
+    }
 }
 
 //=============================================================================================================
 
 const std::string& CommandLineOptionsParser::value(const std::string& optionName) const
 {
-    return m_options[optionSearch(optionName).position].value;
+    searchResult result(optionSearch(optionName));
+    if (result.exists)
+    {
+        return m_options[result.position].value;
+    } else {
+        return ;
+    }
 }
 
 //=============================================================================================================
@@ -246,7 +258,7 @@ std::string CommandLineOptionsParser::getFlagsAsString(const CommandLineOption& 
 
 //=============================================================================================================
 
-int CommandLineOptionsParser::getMaxSizeofFlagsString(int minSize) const
+size_t CommandLineOptionsParser::getMaxSizeofFlagsString(size_t minSize) const
 {
     size_t maxFlagStringSize(minSize);
     for(const auto& opt: m_options)

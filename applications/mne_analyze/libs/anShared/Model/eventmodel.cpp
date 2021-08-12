@@ -175,7 +175,7 @@ void EventModel::setSamplePos(int iSamplePos)
 int EventModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return m_EventManager.getEventsInGroups(m_selectedEventGroups)->size();
+    return static_cast<int>(m_EventManager.getEventsInGroups(m_selectedEventGroups)->size());
 }
 
 //=============================================================================================================
