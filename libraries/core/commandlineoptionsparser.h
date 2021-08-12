@@ -98,43 +98,9 @@ public:
     //=========================================================================================================
     /**
      *
-     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
-     * in the command line by the user of the application. And Specify a helpline of text to be included in a
-     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
-     *
-     */
-    void addOption(const std::string& name,
-                   const std::vector<std::string>& flags);
-
-    //=========================================================================================================
-    /**
-     *
-     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
-     * in the command line by the user of the application. And Specify a helpline of text to be included in a
-     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
-     *
-     */
-    void addOption(const std::string& name,
-                   const std::vector<std::string>& flags,
-                   const std::vector<std::string>& helpLine);
-
-    //=========================================================================================================
-    /**
-     *
-     * Overloaded method to add an option to the parser.  Define the name, the characters or flags, to be identified
-     * in the command line by the user of the application. And Specify a helpline of text to be included in a
-     * automatically generated help menu. Specify the type of option {with value or without value (default)}.
-     *
-     */
-    void addOption(const std::string& name,
-                   const std::vector<std::string>& flags,
-                   const std::vector<std::string>& helpLine,
-                   const CommandLineOptionType& type);
-
-    //=========================================================================================================
-    /**
-     *
-     * Overloaded method to add an option to the parser. You can add an option already created and configured
+     * Define the name, the characters or flags, to be identified in the command line by the user of the
+     * application. And Specify a helpline of text to be included in a automatically generated help menu.
+     * Specify the type of option {with value or without value (default)}.
      *
      */
     void addOption(const CommandLineOption& opt);

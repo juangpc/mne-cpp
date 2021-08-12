@@ -66,6 +66,7 @@ private slots:
     //test CommandLineOption
     void testCommandLineOptionType();
     void testCommandLineOptionConstructors();
+    void testOptionsParser();
 
     void cleanupTestCase();
 
@@ -105,9 +106,31 @@ void TestCommandLineOptionsParser::testCommandLineOptionType()
 void TestCommandLineOptionsParser::testCommandLineOptionConstructors()
 {
     CORELIB::CommandLineOption option;
+    QVERIFY(option.name.empty());
+    QVERIFY(option.flagsList.size() == 0);
+    QVERIFY(option.helpStr.empty());
+    QVERIFY(option.type == CORELIB::CommandLineOptionType::withoutValue);
+    QVERIFY(option.isSet == false);
+    QVERIFY(option.value == std::string());
 
+    CORELIB::CommandLineOption option2("help",{"-h","--h","--help","/h","/help"}, {"Display this help.", "this is the second line"});
+    QVERIFY(option2.name == "help");
+    QVERIFY(option2.flagsList.size() == 5);
+    QVERIFY((option2.helpStr.size() == 2) && (option2.helpStr[0] == "Display this help."));
+    QVERIFY(option2.type == CORELIB::CommandLineOptionType::withoutValue);
+    QVERIFY(option2.isSet == false);
+    QVERIFY(option2.value == std::string());
+    QVERIFY(!option2.flagContained("-v"));
+    QVERIFY(option2.flagContained("--h"));
+    QVERIFY(option2.flagContained("/h"));
 }
 
+//=============================================================================================================
+
+void TestCommandLineOptionsParser::testOptionsParser()
+{
+
+}
 
 //=============================================================================================================
 // MAIN
