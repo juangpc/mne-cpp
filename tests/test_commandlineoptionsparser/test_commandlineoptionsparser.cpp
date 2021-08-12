@@ -135,6 +135,10 @@ void TestCommandLineOptionsParser::testOptionsParser()
                     const_cast<char*> ("blu.txt")};
     CORELIB::CommandLineOptionsParser parser(list);
     parser.parse(argc, argv );
+
+    QVERIFY(parser.isSet("input"));
+    QVERIFY(!parser.isSet("help"));
+    QVERIFY(!parser.isSet("newOne"));
 }
 
 //=============================================================================================================
