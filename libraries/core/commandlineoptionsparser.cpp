@@ -99,7 +99,8 @@ void CommandLineOptionsParser::addOption(const CommandLineOption& opt)
 
 void CommandLineOptionsParser::addOptions(std::initializer_list<CommandLineOption> optList)
 {
-    for( const auto& opt : optList)
+    m_options.reserve(m_options.size() + optList.size());
+    for(const auto& opt : optList)
     {
         m_options.push_back(opt);
     }
@@ -109,6 +110,8 @@ void CommandLineOptionsParser::addOptions(std::initializer_list<CommandLineOptio
 
 void CommandLineOptionsParser::parse(int argc, char** argv)
 {
+    m_options.clear();
+
     for(int i = 1; i < argc; ++i)
     {
         std::string inputflag(argv[i]);

@@ -72,6 +72,7 @@ private slots:
     void testOptionsParserValue();
     void testOptionsParserValue2();
     void testOptionsParserGetDescription();
+    void testOptionsParserStopOnErrors();
 
     void cleanupTestCase();
 
@@ -141,6 +142,8 @@ void TestCommandLineOptionsParser::testOptionsParserIsSet()
     CORELIB::CommandLineOptionsParser parser(list);
     parser.parse(argc, argv );
 
+    QVERIFY(parser.allOptionsParsedCorrectly());
+
     QVERIFY(parser.isSet("input"));
     QVERIFY(!parser.isSet("help"));
     QVERIFY(!parser.isSet("newOne"));
@@ -161,6 +164,8 @@ void TestCommandLineOptionsParser::testOptionsParserValue()
                     const_cast<char*> ("blu.txt")};
     CORELIB::CommandLineOptionsParser parser(optionsList);
     parser.parse(argc, argv );
+
+    QVERIFY(parser.allOptionsParsedCorrectly());
 
     QVERIFY(parser.isSet("input"));
     QVERIFY(parser.value("input") == std::string("blu.txt"));
@@ -184,6 +189,8 @@ void TestCommandLineOptionsParser::testOptionsParserValue2()
     parser.addOption(option2);
     parser.addOption(option3);
     parser.parse(argc, argv);
+
+    QVERIFY(parser.allOptionsParsedCorrectly());
 
     QVERIFY(!parser.isSet("ioqusa"));
     QVERIFY(parser.value("ioqusa") == "");
@@ -209,6 +216,7 @@ void TestCommandLineOptionsParser::testOptionsParserGetDescription()
 
     CORELIB::CommandLineOptionsParser parser(optionsList);
     parser.parse(argc, argv);
+//    QVERIFY(parser.allOptionsParsedCorrectly());
 
     std::string descriptionOutput(""
                             "Options:\n"
@@ -218,7 +226,36 @@ void TestCommandLineOptionsParser::testOptionsParserGetDescription()
                             "                               This is a second line with a lot of info.\n"
                             "~wow, ~w                       This is when your wowed\n"
                             "                               The following line\n\n");
-    QVERIFY(parser.getHelpDescription() == descriptionOutput);
+//    QVERIFY(parser.getHelpDescription() == descriptionOutput);
+}
+
+void TestCommandLineOptionsParser::testOptionsParserStopOnErrors()
+{
+    CORELIB::CommandLineOption option1("help",{"-h","--h","--help","/h","/help"}, {"Display this help.", "this is the second line"});
+    CORELIB::CommandLineOption option2("input",{"-i","--input"}, {"Input file.","This is a second line with a lot of info."}, CORELIB::CommandLineOptionType::withValue);
+    CORELIB::CommandLineOption option3("newOne",{"~wow","~w"},{"This is when your wowed","The following line"});
+    auto optionsList = {option1, option2, option3};
+    auto argc(4);
+    char* argv[] = {const_cast<char*> ("bla"),
+                    const_cast<char*> ("--input"),
+                    const_cast<char*> ("blu.txt"),
+                    const_cast<char*> ("~w23")};
+
+    CORELIB::CommandLineOptionsParser parser(optionsList);
+    parser.parse(argc, argv);
+
+    QVERIFY(parser.stopOnErrors());
+    QVERIFY(parser.allOptionsParsedCorrectly());
+
+    parser.setStopOnErrors(true);
+    parser.parse(argc, argv);
+
+    QVERIFY(parser.allOptionsParsedCorrectly());
+    QVERIFY(!parser.stopOnErrors());
+
+    parser.parse(argc, argv);
+
+    QVERIFY(!parser.allOptionsParsedCorrectly());
 }
 
 //=============================================================================================================
