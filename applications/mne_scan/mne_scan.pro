@@ -38,6 +38,9 @@ include(../../mne-cpp.pri)
 
 TEMPLATE = subdirs
 
+MNE_SCAN_CONFIG += \
+                MneScanPlugins \
+
 SUBDIRS += \
     libs \
     plugins \
@@ -46,10 +49,10 @@ SUBDIRS += \
 libs.depends =
 plugins.depends = libs
 
-contains(MNECPP_CONFIG, noMneScanPlugins) {
+contains(MNE_SCAN_CONFIG, MneScanPlugins) {
+    mne_scan.depends = libs plugins
+} else {
     message("Building MNE Scan without plugins")
     SUBDIRS -= plugins \
     mne_scan.depends = libs
-} else {
-    mne_scan.depends = libs plugins
 }

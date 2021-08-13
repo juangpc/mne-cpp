@@ -38,18 +38,21 @@ include(../../mne-cpp.pri)
 
 TEMPLATE = subdirs
 
+MNE_ANALYZE_CONFIG += \
+                MneAnalyzePlugins \
+
 SUBDIRS += \
-    libs \
-    plugins \
-    mne_analyze \
+        libs \
+        plugins \
+        mne_analyze \
 
 libs.depends =
 plugins.depends = libs
 
-contains(MNECPP_CONFIG, noMneAnalyzePlugins) {
+contains(MNE_ANALYZE_CONFIG, MneAnalyzePlugins) {
+    mne_analyze.depends = libs plugins
+} else {
     message("Building MNE Analyze without plugins")
     SUBDIRS -= plugins \
     mne_analyze.depends = libs
-} else {
-    mne_analyze.depends = libs plugins
 }

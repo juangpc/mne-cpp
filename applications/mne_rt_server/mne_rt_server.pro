@@ -39,17 +39,20 @@ include(../../mne-cpp.pri)
 
 TEMPLATE = subdirs
 
+MNE_RTSERVER_CONFIG += \
+            MneRtServerPlugins \
+
 SUBDIRS += \
     plugins \
     mne_rt_server \
 
 plugins.depends = 
 
-contains(MNECPP_CONFIG, noMneRtServerPlugins) {
+contains(MNE_RTSERVER_CONFIG, MneRtServerPlugins) {
+    mne_rt_server.depends = plugins
+} else {
     message("Building MNE Rt Server without plugins")
     SUBDIRS -= plugins \
     mne_rt_server.depends =
-} else {
-    mne_rt_server.depends = plugins
 }
 

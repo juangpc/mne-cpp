@@ -34,19 +34,17 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2020 Authors of MNE-CPP. All rights reser
 
 ########################################### PROJECT CONFIGURATION #############################################
 
-# To compile with code coverage support run: qmake MNECPP_CONFIG+=withCodeCov
-# To disable tests run: qmake MNECPP_CONFIG+=noTests
-# To disable examples run: qmake MNECPP_CONFIG+=noExamples
-# To disable applications run: qmake MNECPP_CONFIG+=noApplications
-# To disable MNE Scan plugins run: qmake MNECPP_CONFIG+=noMneScanPlugins
-# To disable MNE Analyze plugins run: qmake MNECPP_CONFIG+=noMneAnalyzePlugins
-# To disable MNE Rt Server plugins run: qmake MNECPP_CONFIG+=noMneRtServerPlugins
+
+# To disable any of the sub-projects (i.e. tests, benchmarks, examples, etc.)
+# comment that line in the MNE_CPP definition.
+
 # To build applications as .app bundles on MacOS run: qmake MNECPP_CONFIG+=withAppBundles
 # To build MNE-CPP libraries and executables statically run: qmake MNECPP_CONFIG+=static
-# To build MNE-CPP with FFTW support in Eigen (make sure to specify FFTW_DIRs below) run: qmake MNECPP_CONFIG+=useFFTW
+# To compile with code coverage support run: qmake MNECPP_CONFIG+=withCodeCov
 # To build MNE-CPP without QOpenGLWidget support run: qmake MNECPP_CONFIG+=noQOpenGLWidget
-# To build MNE-CPP against WebAssembly (Wasm) run: qmake MNECPP_CONFIG+=wasm
-# To build MNE-CPP with MNE_TRACER support run: qmake MNECPP_CONFIG+=trace
+
+
+
 # To build MNE Scan with BrainFlow support run: qmake MNECPP_CONFIG+=withBrainFlow
 # To build MNE Scan with LSL support run: qmake MNECPP_CONFIG+=withLsl
 # To build MNE Scan with BrainAMP support run: qmake MNECPP_CONFIG+=withBrainAmp
@@ -56,7 +54,16 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2020 Authors of MNE-CPP. All rights reser
 
 
 # Default flags
-MNECPP_CONFIG += benchmarks /
+MNECPP_CONFIG += \
+                applications \
+                testframes \
+                benchmarks \
+                examples \
+#               wasm \
+                withCodeCov \
+#               useFFT \
+#               trace \
+
 
 # Define c++ version
 CONFIG += c++14

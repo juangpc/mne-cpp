@@ -40,11 +40,11 @@ TEMPLATE = subdirs
 SUBDIRS += \
     libraries \
 
-!contains(MNECPP_CONFIG, noApplications) {
+contains(MNECPP_CONFIG, applications) {
     SUBDIRS += applications
 }
 
-!contains(MNECPP_CONFIG, noExamples) {
+contains(MNECPP_CONFIG, examples) {
     SUBDIRS += examples
 }
 
