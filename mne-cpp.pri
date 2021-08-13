@@ -38,32 +38,19 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2020 Authors of MNE-CPP. All rights reser
 # To disable any of the sub-projects (i.e. tests, benchmarks, examples, etc.)
 # comment that line in the MNE_CPP definition.
 
-# To build applications as .app bundles on MacOS run: qmake MNECPP_CONFIG+=withAppBundles
-# To build MNE-CPP libraries and executables statically run: qmake MNECPP_CONFIG+=static
-# To compile with code coverage support run: qmake MNECPP_CONFIG+=withCodeCov
-# To build MNE-CPP without QOpenGLWidget support run: qmake MNECPP_CONFIG+=noQOpenGLWidget
-
-
-
-# To build MNE Scan with BrainFlow support run: qmake MNECPP_CONFIG+=withBrainFlow
-# To build MNE Scan with LSL support run: qmake MNECPP_CONFIG+=withLsl
-# To build MNE Scan with BrainAMP support run: qmake MNECPP_CONFIG+=withBrainAmp
-# To build MNE Scan with EegoSports support run: qmake MNECPP_CONFIG+=withEego
-# To build MNE Scan with GUSBAmp support run: qmake MNECPP_CONFIG+=withGUSBAmp
-# To build MNE Scan with TMSI support run: qmake MNECPP_CONFIG+=withTmsi
-
-
 # Default flags
 MNECPP_CONFIG += \
-                applications \
-                testframes \
-                benchmarks \
-                examples \
-#               wasm \
-                withCodeCov \
-#               useFFT \
-#               trace \
-
+    applications    \
+    testframes      \
+    benchmarks      \
+    examples        \
+#    wasm            \
+#    withCodeCov     \
+#    useFFT          \
+#    withAppBundles  \
+#    noQOpenGLWidget \
+#    trace           \
+#    static          \
 
 # Define c++ version
 CONFIG += c++14

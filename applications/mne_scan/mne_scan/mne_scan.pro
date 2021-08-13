@@ -80,27 +80,27 @@ contains(MNECPP_CONFIG, static) {
 	    -lrtfwd
             #-ldummytoolbox
 
-    contains(MNECPP_CONFIG, withGUSBAmp) {
+    contains(MNESCAN_CONFIG, withGUSBAmp) {
         LIBS += -lgusbamp
         DEFINES += WITHGUSBAMP
     }
-    contains(MNECPP_CONFIG, withBrainAmp) {
+    contains(MNESCAN_CONFIG, withBrainAmp) {
         LIBS += -lbrainamp
         DEFINES += WITHBRAINAMP
     }
-    contains(MNECPP_CONFIG, withEego) {
+    contains(MNESCAN_CONFIG, withEego) {
         LIBS += -leegosports
         DEFINES += WITHEEGOSPORTS
     }
-    contains(MNECPP_CONFIG, withLsl) {
+    contains(MNESCAN_CONFIG, withLsl) {
         LIBS += -llsladapter
         DEFINES += WITHLSL
     }
-    contains(MNECPP_CONFIG, withTmsi) {
+    contains(MNESCAN_CONFIG, withTmsi) {
         LIBS += -ltmsi
         DEFINES += WITHTMSI
     }
-    contains(MNECPP_CONFIG, withBrainFlow) {
+    contains(MNESCAN_CONFIG, withBrainFlow) {
         LIBS += -lbrainflowboard
         DEFINES += WITHBRAINFLOW
     }
