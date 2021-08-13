@@ -35,8 +35,8 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2020 Authors of MNE-CPP. All rights reser
 ########################################### PROJECT CONFIGURATION #############################################
 
 
-# To disable any of the sub-projects (i.e. tests, benchmarks, examples, etc.)
-# comment that line in the MNE_CPP definition.
+# To disable/enable any of the sub-projects (i.e. tests, benchmarks, examples, etc.)
+#    comment/uncomment that line in the MNE_CPP definition.
 
 # Default flags
 MNECPP_CONFIG += \

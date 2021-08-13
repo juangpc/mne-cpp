@@ -38,8 +38,14 @@ include(../../mne-cpp.pri)
 
 TEMPLATE = subdirs
 
-MNE_SCAN_CONFIG += \
-                MneScanPlugins \
+MNESCAN_CONFIG += \
+    MneScanPlugins  \
+#    withBrainFlow   \
+#    withLsl         \
+#    withBrainAmp    \
+#    withEego        \
+#    withGUSBAmp     \
+#    withTmsi        \
 
 SUBDIRS += \
     libs \
@@ -49,7 +55,7 @@ SUBDIRS += \
 libs.depends =
 plugins.depends = libs
 
-contains(MNE_SCAN_CONFIG, MneScanPlugins) {
+contains(MNESCAN_CONFIG, MneScanPlugins) {
     mne_scan.depends = libs plugins
 } else {
     message("Building MNE Scan without plugins")
