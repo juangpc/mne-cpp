@@ -20,7 +20,7 @@ MNE Tracer does this register using a json file where each function call you spe
 
 In order to use there are basically three steps.
 - The functionality is ready in the Utils library (under ```libraries/utils```), so please make sure that Utils library is correctly added to your project (if you're using our recommended settings, this should be the case by default). But make sure Utils lib is correctly linked to your project. 
-- You will need to define the macro ```TRACE``` in your code. If you are using QtCreator and the project's build engine configuration files, you can add the ```trace``` option to the ```MNECPP_CONFIG``` variable in the ```mne-cpp.pri``` file (see image). You can also do this either through the command-line or through the project configuration options. You can also manually add the line ```#include TRACE``` to your code, however we recommend using the build-engine options. 
+- You will need to define the macro ```TRACE``` in your code. If you are using QtCreator and the project's build engine configuration files, you can add the ```trace``` option to the ```MNECPP_CONFIG``` variable in the ```mne-cpp.pri``` file (see image). You can do this either through the command-line or through the project configuration options. You can also manually add the line ```#include TRACE``` to your code, however we recommend using the build-engine options. 
 
 ![](../../images/mnetracer/trace_option.png)
 
@@ -34,12 +34,14 @@ Before recording the time point where your code starts we need to make sure the 
 After this line is executed, every function call you specify as "traceable" will be recorded and registered in the tracer file.
 Finally, after using the tracer we need to correctly format and close the output register file. We do this by adding the macro ```MNE_TRACER_DISABLE``` to our project. Execution after that point will not tracer anythin.
 
-For instance, a test of a plugin of an application could be configured correctly if we added this to the main function.
+For instance, a test of a plugin of an application could be configured correctly if we added this to the main function. The line ```MNE_TRACER_ENABLE(filename.json)``` 
+defines de zero time for the tracer. It can be set at any point in the code. In this case, since it is the first line of the application, it wil set the time = 0 at the 
+moment the application starts.
 
 ```c++
 int main(int argc, char *argv[])
 {
-    MNE_TRACER_ENABLE(filename.json)
+    MNE_TRACER_ENABLE(filename.json) //<--  
 
     //... your application starts here
     //... you can trace specific function calls 
