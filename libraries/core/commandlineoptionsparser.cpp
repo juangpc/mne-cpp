@@ -53,7 +53,7 @@ using namespace CORELIB;
 
 CommandLineOptionsParser::CommandLineOptionsParser()
 : m_bOptionsParsedCorrectly(false)
-, m_bStopOnErrors(true)
+, m_bAllowUnkowns(true)
 {
     clear();
 }
@@ -107,10 +107,15 @@ void CommandLineOptionsParser::addOptions(std::initializer_list<CommandLineOptio
 }
 
 //=============================================================================================================
-
+//This method is probably the most important of the class. It goes throught the input args
+//and checks for presence in an already prepared database (a vector for simplicity).
+//It starts with argv 1 because we supose 0 will be the actual application number.
+//The method stops if m_bStopOnError = true, or ignores invalid, unkown or erroneous input arguments.
+//In the future this should be treated with exceptions (probably).
 void CommandLineOptionsParser::parse(int argc, char** argv)
 {
-    m_options.clear();
+    bool badValueArgument(false);
+    bool unkownArgument(false);
 
     for(int i = 1; i < argc; ++i)
     {
@@ -128,20 +133,26 @@ void CommandLineOptionsParser::parse(int argc, char** argv)
                     opt.value = std::string(argv[i + 1]);
                     ++i;
                 } else {
-                    if(m_bStopOnErrors)
-                    {
-                        std::cout << "Error parsing input argumets. Arg: " << opt.name << " requires a following value.\n";
-                        exit(1);
-                    }
+                    badValueArgument = true;
+                    std::cout << "Error parsing input argumets. Arg: " << opt.name << " requires a following value.\n";
+                    break;
                 }
             }
         } else {
-            if(m_bStopOnErrors)
+            if(!m_bAllowUnkowns)
             {
+                unkownArgument = true;
                 std::cout << "Error. Input argument unknown: " << argv[i] << "\n";
-                exit(1);
+                break;
             }
         }
+    }
+
+    if(badValueArgument || unkownArgument)
+    {
+        m_bOptionsParsedCorrectly = false;
+    } else {
+        m_bOptionsParsedCorrectly = true;
     }
 }
 
@@ -176,16 +187,16 @@ CommandLineOptionsParser::searchResult CommandLineOptionsParser::flagSearch(cons
 
 //=============================================================================================================
 
-void CommandLineOptionsParser::setStopOnErrors(bool s)
+void CommandLineOptionsParser::setAllowUnkowns(bool s)
 {
-    m_bStopOnErrors = s;
+    m_bAllowUnkowns = s;
 }
 
 //=============================================================================================================
 
-bool CommandLineOptionsParser::stopOnErrors() const
+bool CommandLineOptionsParser::allowUnknowns() const
 {
-    return m_bStopOnErrors;
+    return m_bAllowUnkowns;
 }
 
 //=============================================================================================================
@@ -205,7 +216,14 @@ bool CommandLineOptionsParser::isSet(const std::string& optionName) const
 
 const std::string& CommandLineOptionsParser::value(const std::string& optionName) const
 {
-    return m_options[optionSearch(optionName).position].value;
+    searchResult result(optionSearch(optionName));
+    if (result.exists)
+    {
+        return m_options[optionSearch(optionName).position].value;
+    } else {
+        const static std::string emptyString;
+        return emptyString;
+    }
 }
 
 //=============================================================================================================

@@ -134,18 +134,19 @@ public:
     //=========================================================================================================
     /**
      *
-     * Specify whether the parser should stop the application when an unknown option has been used.
+     * Specify whether the parser should disregard unknown option has been used or consider a failed parsing if
+     * that happens.
      *
      */
-    void setStopOnErrors(bool s);
+    void setAllowUnkowns(bool s);
 
     //=========================================================================================================
     /**
      *
-     * Retrieve if the current parser will stop on error or not.
+     * Retrieve if the current parser will regard or not unknown options.
      *
      */
-    bool stopOnErrors() const;
+    bool allowUnknowns() const;
 
     //=========================================================================================================
     /**
@@ -228,7 +229,7 @@ private:
     size_t getMaxSizeofFlagsString(size_t minSize) const;
 
     bool m_bOptionsParsedCorrectly;             /**< State variable to check if all options have been correctly parsed.>*/
-    bool m_bStopOnErrors;                       /**< Stores if the parser will stop when finding an option not previously added.>*/
+    bool m_bAllowUnkowns;                       /**< Stores if the parser will stop when finding an option not previously added.>*/
     std::vector<CommandLineOption> m_options;   /**< Container of the options to be parsed.>*/
 };
 

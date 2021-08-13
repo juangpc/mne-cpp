@@ -1,4 +1,3 @@
-
 //=============================================================================================================
 /**
  * @file     test_commandlineoptionsparser.cpp
@@ -67,6 +66,7 @@ private slots:
 
     //test CommandLineOption
     void testCommandLineOptionType();
+    void testDefaultConstructor();
     void testCommandLineOptionConstructors();
     void testOptionsParserIsSet();
     void testOptionsParserValue();
@@ -100,6 +100,22 @@ void TestCommandLineOptionsParser::testCommandLineOptionType()
     QVERIFY(static_cast<int>(option) == 0);
     option = CORELIB::CommandLineOptionType::withoutValue;
     QVERIFY(static_cast<int>(option) == 1);
+}
+
+//=============================================================================================================
+
+void TestCommandLineOptionsParser::testDefaultConstructor()
+{
+    CORELIB::CommandLineOptionsParser* parser(new CORELIB::CommandLineOptionsParser);
+
+    QVERIFY(parser->allowUnknowns());
+    QVERIFY(!parser->allOptionsParsedCorrectly());
+
+    parser->setAllowUnkowns(false);
+    QVERIFY(!parser->allowUnknowns());
+
+    QVERIFY(!parser->isSet("randomString"));
+    QVERIFY(parser->value("randomString") == "");
 }
 
 //=============================================================================================================
@@ -171,6 +187,7 @@ void TestCommandLineOptionsParser::testOptionsParserValue()
     QVERIFY(parser.value("input") == std::string("blu.txt"));
 }
 
+//=============================================================================================================
 
 void TestCommandLineOptionsParser::testOptionsParserValue2()
 {
@@ -202,6 +219,8 @@ void TestCommandLineOptionsParser::testOptionsParserValue2()
     QVERIFY(parser.value("newOne") == "");
 }
 
+//=============================================================================================================
+
 void TestCommandLineOptionsParser::testOptionsParserGetDescription()
 {
     CORELIB::CommandLineOption option1("help",{"-h","--h","--help","/h","/help"}, {"Display this help.", "this is the second line"});
@@ -216,7 +235,7 @@ void TestCommandLineOptionsParser::testOptionsParserGetDescription()
 
     CORELIB::CommandLineOptionsParser parser(optionsList);
     parser.parse(argc, argv);
-//    QVERIFY(parser.allOptionsParsedCorrectly());
+    QVERIFY(parser.allOptionsParsedCorrectly());
 
     std::string descriptionOutput(""
                             "Options:\n"
@@ -226,8 +245,10 @@ void TestCommandLineOptionsParser::testOptionsParserGetDescription()
                             "                               This is a second line with a lot of info.\n"
                             "~wow, ~w                       This is when your wowed\n"
                             "                               The following line\n\n");
-//    QVERIFY(parser.getHelpDescription() == descriptionOutput);
+    QVERIFY(parser.getHelpDescription() == descriptionOutput);
 }
+
+//=============================================================================================================
 
 void TestCommandLineOptionsParser::testOptionsParserStopOnErrors()
 {
@@ -239,22 +260,25 @@ void TestCommandLineOptionsParser::testOptionsParserStopOnErrors()
     char* argv[] = {const_cast<char*> ("bla"),
                     const_cast<char*> ("--input"),
                     const_cast<char*> ("blu.txt"),
-                    const_cast<char*> ("~w23")};
+                    const_cast<char*> ("~w2")};
 
     CORELIB::CommandLineOptionsParser parser(optionsList);
     parser.parse(argc, argv);
 
-    QVERIFY(parser.stopOnErrors());
+    QVERIFY(parser.allowUnknowns());
     QVERIFY(parser.allOptionsParsedCorrectly());
 
-    parser.setStopOnErrors(true);
     parser.parse(argc, argv);
 
     QVERIFY(parser.allOptionsParsedCorrectly());
-    QVERIFY(!parser.stopOnErrors());
+
+    parser.setAllowUnkowns(true);
+    QVERIFY(parser.allowUnknowns());
+
+    parser.setAllowUnkowns(false);
+    QVERIFY(!parser.allowUnknowns());
 
     parser.parse(argc, argv);
-
     QVERIFY(!parser.allOptionsParsedCorrectly());
 }
 
@@ -264,4 +288,5 @@ void TestCommandLineOptionsParser::testOptionsParserStopOnErrors()
 
 QTEST_GUILESS_MAIN(TestCommandLineOptionsParser)
 #include "test_commandlineoptionsparser.moc"
+
 
