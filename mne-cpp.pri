@@ -44,13 +44,13 @@ MNECPP_CONFIG += \
     testframes      \
     benchmarks      \
     examples        \
-#    wasm            \
+    #    wasm            \
+    #    static          \
+    #    noQOpenGLWidget \
 #    withCodeCov     \
 #    useFFT          \
 #    withAppBundles  \
-#    noQOpenGLWidget \
 #    trace           \
-#    static          \
 
 # Define c++ version
 CONFIG += c++14
