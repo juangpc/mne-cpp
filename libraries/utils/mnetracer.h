@@ -1,7 +1,7 @@
 //=============================================================================================================
 /**
  * @file     mnetracer.h
- * @author   Juan GPC <jgarciaprietoh@mgh.harvard.edu>;
+ * @author   Juan GPC <jgarciaprieto@mgh.harvard.edu>;
  * @since    0.1.9
  * @date     May 18, 2021
  *
