@@ -242,6 +242,14 @@ FiffCoordTrans FiffCoordTrans::make(int from, int to, const Matrix3f& rot, const
 
 //=============================================================================================================
 
+FiffCoordTrans FiffCoordTrans::make(int from, int to, const Matrix4f& matTrans)
+{
+    return make(from, to, matTrans, false);
+}
+
+//=============================================================================================================
+
+
 FiffCoordTrans FiffCoordTrans::make(int from, int to, const Matrix4f& matTrans, bool bStandard)
 {
     FiffCoordTrans t;
