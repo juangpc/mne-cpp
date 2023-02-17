@@ -9,6 +9,7 @@ add_subdirectory(fiffsimulator)
 add_subdirectory(ftbuffer)
 add_subdirectory(babymeg)
 add_subdirectory(natus)
+add_subdirectory(new_sensor)
 
 # Algorithm Plugin
 add_subdirectory(rtcmne)
