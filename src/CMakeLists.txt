@@ -22,7 +22,7 @@ option(LIB_ONLY "Build only the libraries." OFF)
 option(FOR_RELEASE "Build only libs and apps." OFF)
 
 ##==============================================================================
-## FFTW Options 
+## FFTW Options
 
 option(USE_FFTW "Use fftw backend for eigen" OFF)
 
