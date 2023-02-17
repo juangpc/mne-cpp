@@ -48,6 +48,7 @@
 *.so.debug
 *.debug
 
+.session
 # Compiled Static libraries
 *.lai
 *.la
