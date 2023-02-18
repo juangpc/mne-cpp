@@ -15,7 +15,7 @@ option(NO_EXAMPLES "Skip building examples" OFF)
 option(NO_APPLICATIONS "Skip building applications" OFF)
 option(NO_TESTS "Skip building tests" OFF)
 
-# Equivalent to NO_EXAMPLES, NO_APPLICATIONS and NO_TEST
+# Equivalent to NO_EXAMPLES, NO_APPLICATIONS and NO_TESTS
 option(LIB_ONLY "Build only the libraries." OFF)
 
 # Equivalent to NO_EXAMPLES and NO_TESTS
