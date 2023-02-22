@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD 14)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_MAC_APP_BUNDLE "Build app bundle on macos" OFF)
 
-option(NO_EXAMPLES "Skip building examples" OFF)
+option(NO_EXAMPLES "Skip building examples" ON)
 option(NO_APPLICATIONS "Skip building applications" OFF)
-option(NO_TESTS "Skip building tests" OFF)
+option(NO_TESTS "Skip building tests" ON)
 
 # Equivalent to NO_EXAMPLES, NO_APPLICATIONS and NO_TESTS
 option(LIB_ONLY "Build only the libraries." OFF)
