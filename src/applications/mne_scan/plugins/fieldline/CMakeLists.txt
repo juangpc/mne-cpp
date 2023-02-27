@@ -10,7 +10,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED
   COMPONENTS Core Widgets Network Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED
   COMPONENTS Core Widgets Network Concurrent)
-find_package(Python COMPONENTS Interpreter Development)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 cmake_path(GET Python_EXECUTABLE PARENT_PATH Python_BIN_DIR)
 
 set(PYTHON_COMPILE_FLAGS "--cflags")
