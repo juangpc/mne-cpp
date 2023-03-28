@@ -80,6 +80,10 @@
     SET OutFolder=%BaseFolder%\out\%BuildName%
 
     call:showLogo
+    call:showBuildSuccessful
+    call:showBuildFailed
+    exit /B 0
+    
     call:doPrintConfiguration
 
     IF "%MockBuild%"=="True" (
