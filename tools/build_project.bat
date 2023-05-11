@@ -46,6 +46,12 @@
         call:showHelp
         goto :endOfScript
       )
+      IF "%ExtraSection%"=="False" IF "%1"=="--help" (
+        call:showLogo
+        call:showHelp
+        goto :endOfScript
+      )
+
       set Arg=%1
 
       IF "%ExtraSection%"=="False" IF NOT x!Arg!==x!Arg:Release=! (
@@ -377,6 +383,8 @@ doPrintHelp() {
   echo "All options can be used in undefined order, except for the extra args," 
   echo "which have to be at the end."
   echo " "
+  echo "Options:"
+  echo "--------"
   echo "[help]  - Print this help."
   echo "[mock]  - Show commands do not execute them."
   echo "[all]   - Build entire project (libraries, applications, examples, tests)."
@@ -396,6 +404,10 @@ doPrintHelp() {
   echo "             following the double dash will be passed on to cmake"
   echo "             directly without it being parsed."
   echo " "
+  echo "Example:"
+  echo "--------"
+  echo " ./build_project.bat Release_fix_feature_A rebuild -- -G Ninja"
+  echo " "
 }
 
 for (( j=0; j<argc; j++)); do
@@ -410,6 +422,8 @@ for (( j=0; j<argc; j++)); do
   elif [ "${argv[j]}" == "rebuild" ]; then
     Rebuild="true"
   elif [ "${argv[j]}" == "help" ]; then
+    PrintHelp="true"
+  elif [ "${argv[j]}" == "--help" ]; then
     PrintHelp="true"
   elif [ "${argv[j]}" == "static" ]; then
     CMakeConfigFlags="${CMakeConfigFlags} -DBUILD_SHARED_LIBS=OFF"
