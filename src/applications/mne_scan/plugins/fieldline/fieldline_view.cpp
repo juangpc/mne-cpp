@@ -58,7 +58,7 @@
 #include "fieldline/fieldline.h"
 #include "fieldline/fieldline_view.h"
 #include "fieldline/fieldline_view_chassis.h"
-#include "fieldline/fieldline_acqsystem.h"
+#include "fieldline/fieldline_acqsystem/fieldline_acqsystem.h"
 #include "formfiles/ui_fieldline_view.h"
 
 //=============================================================================================================

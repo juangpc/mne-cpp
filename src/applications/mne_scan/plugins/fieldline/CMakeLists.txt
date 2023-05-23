@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(scan_fieldline LANGUAGES CXX)
 
+add_subdirectory(fieldline_acqsystem)
+
 #Handle qt uic, moc, rrc automatically
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -17,7 +19,6 @@ set(HEADERS
     fieldline_global.h
     fieldline_definitions.h
     fieldline.h
-    fieldline_acqsystem.h
     fieldline_view.h
     fieldline_view_chassis.h
     fieldline_view_sensor.h
@@ -28,7 +29,6 @@ set(HEADERS
 set(SOURCES
     fieldline_global.cpp
     fieldline.cpp
-    fieldline_acqsystem.cpp
     fieldline_view.cpp
     fieldline_view_chassis.cpp
     fieldline_view_sensor.cpp
@@ -95,6 +95,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     scShared
     scMeas
     ${FFTW_LIBS}
+    fieldline_acqsystem
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -105,141 +106,4 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(NOT BUILD_SHARED_LIBS)
 target_compile_definitions(${PROJECT_NAME} PRIVATE STATICBUILD QT_STATICPLUGIN)
 endif()
-
-# ###################################################################
-# ######### Python Dependencies #####################################
-# ###################################################################
-
-execute_process(
-    COMMAND which python
-    OUTPUT_VARIABLE Python_EXECUTABLE
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND dirname ${Python_EXECUTABLE}
-    OUTPUT_VARIABLE Python_BIN_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND pwd -P
-    WORKING_DIRECTORY ${Python_BIN_DIR}/..
-    OUTPUT_VARIABLE Python_PREFIX
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND pwd -P
-    WORKING_DIRECTORY ${Python_PREFIX}/lib
-    OUTPUT_VARIABLE Python_LIB_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND ${Python_EXECUTABLE} -c "import platform; major, minor, patch = platform.python_version_tuple(); print(major)"
-    OUTPUT_VARIABLE Python_VERSION_MAJOR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-execute_process(
-    COMMAND ${Python_EXECUTABLE} -c "import platform; major, minor, patch = platform.python_version_tuple(); print(minor)"
-    OUTPUT_VARIABLE Python_VERSION_MINOR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-if(EXISTS ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config)
-    message(STATUS "python config found")
-else()
-    message(STATUS "python config not found")
-    execute_process(
-        COMMAND readlink -f ${Python_EXECUTABLE}
-        OUTPUT_VARIABLE Python_EXECUTABLE_TRUE_PATH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    execute_process(
-        COMMAND dirname ${Python_EXECUTABLE_TRUE_PATH}
-        OUTPUT_VARIABLE Python_BIN_TRUE_DIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    if(NOT EXISTS ${Python_BIN_TRUE_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config)
-        message(FATAL python-config not found. Python installation missing python-config.)
-    else()
-        execute_process(
-            COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${Python_BIN_TRUE_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config
-    )
-        message(STATUS "Creating sym link to python config")
-    endif()
-endif()
-
-execute_process(
-    COMMAND ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config --includes
-    OUTPUT_VARIABLE Python_INCLUDE_DIRS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config --cflags
-    OUTPUT_VARIABLE Python_CFLAGS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config --libs
-    OUTPUT_VARIABLE Python_LIBS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-execute_process(
-    COMMAND ${Python_BIN_DIR}/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}-config --ldflags
-    OUTPUT_VARIABLE Python_LDFLAGS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-# set(Python_VERSION_MAJOR "3")
-# set(Python_VERSION_MINOR "9")
-# set(Python_LIB_DIR "/opt/anaconda3/lib")
-# set(Python_INCLUDE_DIRS "-I/opt/anacnda3/include/python3.9")
-# set(Python_CFLAGS "-I/opt/anaconda3/include/python3.9 -I/opt/anaconda2/include/python3.9 -Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -fwrapv -O2 -Wall -fPIC -O2 -isystem /opt/anaconda3/include -arch x86_64 -I/opt/anaconda3/include -fPIC -O2 -isystem /opt/anaconda3/include -arch x86_64")
-# set(Python_LDFLAGS "-L/opt/anaconda3/lib/python3.9/config-3.9-darwin -ldl -framework CoreFoundation")
-
-separate_arguments(Python_INCLUDE_DIRS_NORM UNIX_COMMAND "${Python_INCLUDE_DIRS}")
-separate_arguments(Python_CFLAGS_NORM UNIX_COMMAND "${Python_CFLAGS}")
-separate_arguments(Python_LDFLAGS_NORM UNIX_COMMAND "${Python_LDFLAGS}")
-
-message(" ")
-message("        python prefix dir: " ${Python_PREFIX})
-message("           python bin dir: " ${Python_BIN_DIR})
-message("           python lib dir: " ${Python_LIB_DIR})
-message("        python executable: " ${Python_EXECUTABLE})
-message("     python version major: " ${Python_VERSION_MAJOR})
-message("     python version minor: " ${Python_VERSION_MINOR})
-message("      python include dirs: " ${Python_INCLUDE_DIRS})
-message("*python include dirs norm: " ${Python_INCLUDE_DIRS_NORM})
-message("            python cflags: " ${Python_CFLAGS})
-message("      *python cflags norm: " ${Python_CFLAGS_NORM})
-message("              python libs: " ${Python_LIBS})
-message("           python ldflags: " ${Python_LDFLAGS})
-message("     *python ldflags norm: " ${Python_LDFLAGS_NORM})
-message("  (*)Message missrepresents content of lists.")
-message(" ")
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-    ${Python_CFLAGS_NORM} ${Python_INCLUDE_DIRS_NORM}
-)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}
-)
-target_link_directories(${PROJECT_NAME} PRIVATE ${Python_LIB_DIR})
-target_link_options(${PROJECT_NAME} PRIVATE ${Python_LDFLAGS_NORM})
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE 
-    PYTHON_VERSION_MAJOR=${Python_VERSION_MAJOR}
-    PYTHON_VERSION_MINOR=${Python_VERSION_MINOR}
-)
-
-# ###################################################################
-# ###################################################################
-# ###################################################################
 

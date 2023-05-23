@@ -24,9 +24,7 @@ print(' ========================================================================
 import logging
 import argparse
 import queue
-import sys
 import time
 import multiprocessing
 
 multiprocessing.set_executable('autofs/cluster/fusion/juan/anaconda3/bin/python')
-

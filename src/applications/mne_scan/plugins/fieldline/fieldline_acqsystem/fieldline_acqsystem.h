@@ -1,6 +1,6 @@
 //=============================================================================================================
 /**
- * @file     fieldline_system_controller.h
+ * @file     fieldline_acqsystem.h
  * @author   Juan GarciaPrieto <jgarciaprieto@mgh.harvard.edu>;
  *           Gabriel B Motta <gbmotta@mgh.harvard.edu>;
  * @since    0.1.0
@@ -37,13 +37,22 @@
 
 #include <string>
 
-#include "fieldline/fieldline.h"
+#define QUOTE(str) #str
+#define EXPAND_AND_QUOTE(str) QUOTE(str)
+
+const char libPythonBugFix[] = "libpython" 
+                                EXPAND_AND_QUOTE(PYTHON_VERSION_MAJOR)
+                                "."
+                                EXPAND_AND_QUOTE(PYTHON_VERSION_MINOR)
+                                ".so";
+
+//#include "fieldline/fieldline.h"
 
 namespace FIELDLINEPLUGIN {
 
 class FieldlineAcqSystem {
  public:
-    explicit FieldlineAcqSystem(Fieldline* parent);
+    FieldlineAcqSystem();
 
     ~FieldlineAcqSystem();
 
@@ -53,7 +62,7 @@ class FieldlineAcqSystem {
 
     void startADC();
     void stopADC();
-    Fieldline* m_pControllerParent;
+    //Fieldline* m_pControllerParent;
     void initSampleArrays();
     void addSampleToSamplesColumn(size_t sensorIdx, double value);
     void restartAllSensors();
@@ -63,7 +72,7 @@ class FieldlineAcqSystem {
     void setCloseLoop();
 
  private:
-    void preConfigurePython() const;
+    void postInitPython() const;
     void runPythonFile(const char* file, const char* comment) const;
     void* loadModule(const char* moduleName);
     void* loadCModule(const char* moduleName, void* (*moduleInitFunc)(void));

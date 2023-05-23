@@ -46,7 +46,7 @@
 #include <thread>
 
 #include "fieldline/fieldline.h"
-#include "fieldline/fieldline_acqsystem.h"
+#include "fieldline/fieldline_acqsystem/fieldline_acqsystem.h"
 #include "fieldline/fieldline_view.h"
 #include "fieldline/ipfinder.h"
 
@@ -164,7 +164,7 @@ void Fieldline::init()
   m_pRTMSA->measurementData()->setName(this->getName());
   m_outputConnectors.append(m_pRTMSA);
 
-  m_pAcqSystem = new FieldlineAcqSystem(this);
+  m_pAcqSystem = new FieldlineAcqSystem();
 }
 
 //=============================================================================================================
