@@ -97,30 +97,37 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButton_restart">
        <property name="text">
-        <string>PushButton 1</string>
+        <string>Restart</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_1">
+      <widget class="QPushButton" name="pushButton_coarse">
        <property name="text">
-        <string>PushButton 2</string>
+        <string>Coarse Zero</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="pushButton_fine">
        <property name="text">
-        <string>PushButton 3</string>
+        <string>Fine Zero</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="pushButton_disable">
        <property name="text">
-        <string>PushButton 4</string>
+        <string>Disable</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_enable">
+       <property name="text">
+        <string>Enable</string>
        </property>
       </widget>
      </item>

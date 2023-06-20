@@ -78,17 +78,28 @@ class FieldlineViewSensor: public QWidget
 {
     Q_OBJECT
 
- public:
+public:
     explicit FieldlineViewSensor(FieldlineViewChassis *parent, int index);
     ~FieldlineViewSensor();
     void setState(FieldlineSensorStatusType state);
     FieldlineSensorStatusType getState() const;
     void updateLedState();
+signals:
+    void restart();
+    void coarseZero();
+    void fineZero();
 
- protected:
+    void enable();
+    void disable();
+protected:
     virtual void resizeEvent(QResizeEvent *event);
 
- private:
+private:
+    void initializeButtons();
+
+    void setDisabled();
+    void setEnabled();
+
     void updateTimeStamp();
     void switchLedState();
 

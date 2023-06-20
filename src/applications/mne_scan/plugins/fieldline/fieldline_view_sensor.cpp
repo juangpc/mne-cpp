@@ -101,12 +101,18 @@ FieldlineViewSensor::FieldlineViewSensor(FieldlineViewChassis *parent, int index
 
     m_pCircleLed = m_pScene->addEllipse(0, 0, this->width()/3., this->width()/3.,
                                         QPen(Qt::black), QBrush(QColor(200, 1, 1)));
+
+    initializeButtons();
 }
+
+//=============================================================================================================
 
 FieldlineViewSensor::~FieldlineViewSensor()
 {
     // delete m_pUi;
 }
+
+//=============================================================================================================
 
 void FieldlineViewSensor::resizeEvent(QResizeEvent *event)
 {
@@ -118,19 +124,69 @@ void FieldlineViewSensor::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
+//=============================================================================================================
+
 void FieldlineViewSensor::setState(FieldlineSensorStatusType state) {
     m_sensorState = state;
     updateTimeStamp();
 }
 
+//=============================================================================================================
+
 FieldlineSensorStatusType FieldlineViewSensor::getState() const {
     return m_sensorState;
 }
+
+//=============================================================================================================
+
+void FieldlineViewSensor::initializeButtons()
+{
+    m_pUi->pushButton_enable->hide();
+
+    connect(m_pUi->pushButton_restart, &QPushButton::pressed, this, &FieldlineViewSensor::restart);
+    connect(m_pUi->pushButton_coarse, &QPushButton::pressed, this, &FieldlineViewSensor::coarseZero);
+    connect(m_pUi->pushButton_fine, &QPushButton::pressed, this, &FieldlineViewSensor::fineZero);
+
+    connect(m_pUi->pushButton_disable, &QPushButton::pressed, this, &FieldlineViewSensor::setDisabled);
+    connect(m_pUi->pushButton_enable, &QPushButton::pressed, this, &FieldlineViewSensor::setEnabled);
+}
+
+//=============================================================================================================
+
+void FieldlineViewSensor::setDisabled()
+{
+    m_pUi->pushButton_restart->setEnabled(false);
+    m_pUi->pushButton_coarse->setEnabled(false);
+    m_pUi->pushButton_fine->setEnabled(false);
+
+    m_pUi->pushButton_disable->hide();
+    m_pUi->pushButton_enable->show();
+
+    emit disable();
+}
+
+//=============================================================================================================
+
+void FieldlineViewSensor::setEnabled()
+{
+    m_pUi->pushButton_restart->setEnabled(true);
+    m_pUi->pushButton_coarse->setEnabled(true);
+    m_pUi->pushButton_fine->setEnabled(true);
+
+    m_pUi->pushButton_disable->show();
+    m_pUi->pushButton_enable->hide();
+
+    emit enable();
+}
+
+//=============================================================================================================
 
 void FieldlineViewSensor::updateTimeStamp()
 {
     timeStamp = std::chrono::steady_clock::now();
 }
+
+//=============================================================================================================
 
 void FieldlineViewSensor::updateLedState()
 {
@@ -141,7 +197,10 @@ void FieldlineViewSensor::updateLedState()
     }
 }
 
-void FieldlineViewSensor::switchLedState() {
+//=============================================================================================================
+
+void FieldlineViewSensor::switchLedState()
+{
     if (ledState == LedState::A) {
         ledState = LedState::B;
     } else {

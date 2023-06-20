@@ -128,8 +128,6 @@ public:
     Ui::uiFieldlineView* m_pUi;
     QTableWidget* m_pMacIpTable;
     std::vector<FieldlineViewChassis*> m_pAcqSystem;
-
-
 };
 
 }  // namespace FIELDLINEPLUGIN
