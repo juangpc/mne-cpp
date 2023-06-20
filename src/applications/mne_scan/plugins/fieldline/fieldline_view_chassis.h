@@ -80,6 +80,7 @@ class FieldlineViewChassis : public QWidget
 
  public:
     explicit FieldlineViewChassis(FieldlineView *parent, int num);
+    explicit FieldlineViewChassis(FieldlineView *parent, int num, int numSensors);
     ~FieldlineViewChassis();
     void setActive();
 

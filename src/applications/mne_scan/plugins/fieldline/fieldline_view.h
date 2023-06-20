@@ -43,6 +43,8 @@
 #include <vector>
 #include <string>
 
+#include "fieldline_definitions.h"
+
 //=============================================================================================================
 // QT INCLUDES
 //=============================================================================================================
@@ -82,12 +84,37 @@ class FieldlineView : public QWidget
 public:
     explicit FieldlineView(Fieldline* parent);
     ~FieldlineView();
+
+    void setChassisConfiguration(int num_chassis, int num_sensors_per_chassis);
+    void setSensorState(int chassis_id, int sensor_id, FieldlineSensorStatusType state);
+
  signals:
     void updateMacIpTable(int row, int col, const QString& str);
 
+    void connectToAcqSys();
+    void disconnectFromAcqSys();
+
+    void startAllSensors();
+    void stopAllSensors();
+
+    void autoTuneAllSensors();
+    void restartAllSensors();
+    void coarseZeroAllSensors();
+    void fineZeroAllSensors();
+
+    void restartZeroSensor(int chassis_index, int sensor_index);
+    void coarseZeroSensor(int chassis_index, int sensor_index);
+    void fineZeroSensor(int chassis_index, int sensor_index);
+
+    void saveSensorStateReport();
+
  private:
     void initAcqSystem(int numChassis);
+    void initAcqSystem(int numChassis, int numSensorsPerChassis);
+
     void initTopMenu();
+    void hideChassisView();
+    void showChassisView();
 
     void updateMacIpTableItem(int row, int col, const QString& str);
 
@@ -96,19 +123,13 @@ public:
     void setNumRowsIpMacFrame(int i);
 
     void findIps();
-    void connectToAcqSys();
-    void disconnectFromAcqSys();
-    void startAllSensors();
-    void stopAllSensors();
-    void autoTuneAllSensors();
-    void restartAllSensors();
-    void coarseZeroAllSensors();
-    void fineZeroAllSensors();
 
     Fieldline* m_pFieldlinePlugin;
     Ui::uiFieldlineView* m_pUi;
     QTableWidget* m_pMacIpTable;
     std::vector<FieldlineViewChassis*> m_pAcqSystem;
+
+
 };
 
 }  // namespace FIELDLINEPLUGIN

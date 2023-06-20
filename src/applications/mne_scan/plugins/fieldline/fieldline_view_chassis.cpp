@@ -76,14 +76,21 @@ namespace FIELDLINEPLUGIN {
 
 //=============================================================================================================
 
-FieldlineViewChassis::FieldlineViewChassis(FieldlineView *parent, int num )
-: QWidget(parent),
-  m_pFieldlineView(parent),
-  m_pUi(new Ui::uiFieldlineViewChassis),
-  chassisNum(num),
-  numSensors(16),
-  sensorLedUpdateFreq(150)
-  {
+FieldlineViewChassis::FieldlineViewChassis(FieldlineView *parent, int num)
+: FieldlineViewChassis(parent, num, defaultNumSensorsPerChassis)
+{
+}
+
+//=============================================================================================================
+
+FieldlineViewChassis::FieldlineViewChassis(FieldlineView *parent, int num, int numSensors)
+: QWidget(parent)
+, m_pFieldlineView(parent)
+, m_pUi(new Ui::uiFieldlineViewChassis)
+, chassisNum(num)
+, numSensors(numSensors)
+, sensorLedUpdateFreq(150)
+{
     m_pUi->setupUi(this);
 
     std::string chassisName("Fieldline Chassis ");
@@ -94,6 +101,20 @@ FieldlineViewChassis::FieldlineViewChassis(FieldlineView *parent, int num )
     chassisRunning.store(true);
     updateSensorLedThread = std::thread(&FieldlineViewChassis::updateSensorLeds, this);
 }
+
+//=============================================================================================================
+
+FieldlineViewChassis::~FieldlineViewChassis()
+{
+    // delete m_pUi;
+  chassisActive.store(false);
+  chassisRunning.store(false);
+  if (updateSensorLedThread.joinable()) {
+    updateSensorLedThread.join();
+  }
+}
+
+//=============================================================================================================
 
 void FieldlineViewChassis::updateSensorLeds()
 {
@@ -107,6 +128,8 @@ void FieldlineViewChassis::updateSensorLeds()
   }
 }
 
+//=============================================================================================================
+
 void FieldlineViewChassis::createSensors()
 {
   QHBoxLayout* sensorLayout = qobject_cast<QHBoxLayout*>(m_pUi->sensorFrame->layout());
@@ -117,22 +140,13 @@ void FieldlineViewChassis::createSensors()
   }
 }
 
-FieldlineViewChassis::~FieldlineViewChassis()
-{
-    // delete m_pUi;
-  chassisActive.store(false);
-  chassisRunning.store(false);
-  if (updateSensorLedThread.joinable()) {
-    updateSensorLedThread.join();
-  }
-}
+
+//=============================================================================================================
 
 void FieldlineViewChassis::setActive()
 {
   chassisActive.store(true);
 }
-
-
 
 }  // namespace FIELDLINEPLUGIN
 

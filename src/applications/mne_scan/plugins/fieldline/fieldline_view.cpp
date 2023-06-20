@@ -69,8 +69,10 @@
 // DEFINE MEMBER METHODS
 //=============================================================================================================
 
+using FIELDLINEPLUGIN::FieldlineView;
+using FIELDLINEPLUGIN::FieldlineSensorStatusType;
 
-namespace FIELDLINEPLUGIN {
+//=============================================================================================================
 
 FieldlineView::FieldlineView(Fieldline *parent)
 : m_pFieldlinePlugin(parent),
@@ -79,14 +81,34 @@ FieldlineView::FieldlineView(Fieldline *parent)
     m_pUi->setupUi(this);
     initTopMenu();
     initAcqSystem(2);
+//    hideChassisView();
     connect(this, &FieldlineView::updateMacIpTable,
             this, &FieldlineView::updateMacIpTableItem);
 }
+
+//=============================================================================================================
 
 FieldlineView::~FieldlineView()
 {
     delete m_pUi;
 }
+
+//=============================================================================================================
+
+void FieldlineView::setChassisConfiguration(int num_chassis, int num_sensors_per_chassis)
+{
+    (void)num_sensors_per_chassis; //just until done refactoring chassis
+    initAcqSystem(num_chassis);
+}
+
+//=============================================================================================================
+
+void FieldlineView::setSensorState(int chassis_id, int sensor_id, FieldlineSensorStatusType state)
+{
+    m_pAcqSystem[chassis_id];
+}
+
+//=============================================================================================================
 
 void FieldlineView::initTopMenu()
 {
@@ -105,15 +127,33 @@ void FieldlineView::initTopMenu()
     QVBoxLayout* macIpTableLayout = qobject_cast<QVBoxLayout*>(m_pUi->ipMacFrame->layout());
     macIpTableLayout->insertWidget(0, m_pMacIpTable);
 
-    QObject::connect(m_pUi->numChassisSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+    connect(m_pUi->numChassisSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
                      this, &FieldlineView::setNumRowsIpMacFrame);
-    QObject::connect(m_pUi->findIPsBtn, &QPushButton::clicked,
+    connect(m_pUi->findIPsBtn, &QPushButton::clicked,
                      this, &FieldlineView::findIps);
-    QObject::connect(m_pUi->connectBtn, &QPushButton::clicked,
+    connect(m_pUi->connectBtn, &QPushButton::clicked,
                      this, &FieldlineView::connectToAcqSys);
-    QObject::connect(m_pUi->disconnectBtn, &QPushButton::clicked,
+    connect(m_pUi->disconnectBtn, &QPushButton::clicked,
                      this, &FieldlineView::disconnectFromAcqSys);
 }
+
+//=============================================================================================================
+
+void FieldlineView::hideChassisView()
+{
+    m_pUi->acqSystemTopButtonsFrame->hide();
+    m_pUi->chassisRackFrame->hide();
+}
+
+//=============================================================================================================
+
+void FieldlineView::showChassisView()
+{
+    m_pUi->acqSystemTopButtonsFrame->show();
+    m_pUi->chassisRackFrame->show();
+}
+
+//=============================================================================================================
 
 void FieldlineView::findIps() {
     std::vector<std::string> macList;
@@ -129,9 +169,13 @@ void FieldlineView::findIps() {
     m_pFieldlinePlugin->findIpAsync(macList, callback);
 }
 
+//=============================================================================================================
+
 void FieldlineView::updateMacIpTableItem(int row, int col, const QString& str) {
     m_pMacIpTable->item(row, col)->setText(str);
 }
+
+//=============================================================================================================
 
 void FieldlineView::setNumRowsIpMacFrame(int numRows)
 {
@@ -146,250 +190,48 @@ void FieldlineView::setNumRowsIpMacFrame(int numRows)
         m_pMacIpTable->setSortingEnabled(false);
         m_pMacIpTable->setItem(numRows-1, 0, new QTableWidgetItem("a0:b1:c2:d3:e4:f5"));
         m_pMacIpTable->setItem(numRows-1, 1, new QTableWidgetItem("0.0.0.0"));
-        m_pMacIpTable->item(numRows-1, 0)->setToolTip((QString("Doubleclick to find the IP.")));
+        m_pMacIpTable->item(numRows-1, 0)->setToolTip((QString("Double click to find the IP.")));
         m_pMacIpTable->setSortingEnabled(true);
     }
-    //    QVBoxLayout* vertIpMacLayout = qobject_cast<QVBoxLayout*>(m_pUi->ipMacFrame->layout());
-//    if ( i < m_ipMacList.size())
-//    {
-//        vertIpMacLayout->removeItem(m_ipMacList.back());
-//        delete m_ipMacList.back();
-//        m_ipMacList.pop_back();
-//    }
-//    if ( i > m_ipMacList.size())
-//    {
-//        QHBoxLayout* ipMacLayout = new QHBoxLayout(m_pUi->ipMacFrame);
-//        QLineEdit* ip = new QLineEdit("0.0.0.0");
-//        ip->setEnabled(false);
-//        QLineEdit* macAddr = new QLineEdit("AF:70:04:21:2D:28");
-//        ipMacLayout->addWidget(macAddr);
-//        ipMacLayout->addWidget(ip);
-//        vertIpMacLayout->insertLayout(m_ipMacList.size() + 1, ipMacLayout);
-//        m_ipMacList.push_back(ipMacLayout);
-//    }
 }
 
-void FieldlineView::connectToAcqSys() {
-    printLog("connect!\n");
-}
-
-void FieldlineView::disconnectFromAcqSys() {
-    printLog("disconnect!\n");
-    //generate list of mac addresses
-    //call class finder.
-    //    retrieve list of ips and set variable with it.
-}
+//=============================================================================================================
 
 void FieldlineView::initAcqSystemTopButtons()
 {
     QHBoxLayout* acqSystemTopBtnMenuLayout = qobject_cast<QHBoxLayout*>(m_pUi->acqSystemTopButtonsFrame->layout());
+    auto addTopButton = [this, acqSystemTopBtnMenuLayout](const QString& name, int order, void(FieldlineView::*ptr)()){
+        QPushButton* button = new QPushButton(name, m_pUi->acqSystemTopButtonsFrame);
+        connect(button, &QPushButton::clicked, this, ptr);
+        acqSystemTopBtnMenuLayout->insertWidget(order, button);
+    };
 
-    QPushButton* button = new QPushButton(QString("Start"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::startAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(0, button);
-
-    button = new QPushButton(QString("Stop"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::stopAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(1, button);
-
-    button = new QPushButton(QString("Auto-Tune"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::autoTuneAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(3, button);  // after the spacer
-
-    button = new QPushButton(QString("Restart Sensors"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::restartAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(4, button);
-
-    button = new QPushButton(QString("Coarse Zero"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::coarseZeroAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(5, button);
-
-    button = new QPushButton(QString("Fine Zero"), m_pUi->acqSystemTopButtonsFrame);
-    QObject::connect(button, &QPushButton::clicked, this, &FieldlineView::fineZeroAllSensors);
-    acqSystemTopBtnMenuLayout->insertWidget(6, button);
+    addTopButton("Start", 0, &FieldlineView::startAllSensors);
+    addTopButton("Stop", 1, &FieldlineView::stopAllSensors);
+    //number 2 is skipped because that is a spacer in the layout.
+    addTopButton("Auto-Tune", 3, &FieldlineView::autoTuneAllSensors);
+    addTopButton("Restart Sensors", 4, &FieldlineView::restartAllSensors);
+    addTopButton("Coarse Zero", 5, &FieldlineView::coarseZeroAllSensors);
+    addTopButton("Fine Zero", 6, &FieldlineView::fineZeroAllSensors);
+    addTopButton("Save Sensor State Report", 7, &FieldlineView::saveSensorStateReport);
 }
+
+//=============================================================================================================
 
 void FieldlineView::initAcqSystem(int numChassis)
 {
-    // QHBoxLayout* acqSystemTopBtnMenuLayout = qobject_cast<QHBoxLayout*>(m_pUi->acqSystemTopButtonsFrame->layout());
+    initAcqSystem(numChassis, defaultNumSensorsPerChassis);
+}
+
+//=============================================================================================================
+
+void FieldlineView::initAcqSystem(int numChassis, int numSensorsPerChassis)
+{
     initAcqSystemTopButtons();
     QVBoxLayout* acqSystemRackLayout = qobject_cast<QVBoxLayout*>(m_pUi->chassisRackFrame->layout());
     for (int i = 0; i < numChassis; i++) {
-        FieldlineViewChassis* pChassis = new FieldlineViewChassis(this, i);
+        FieldlineViewChassis* pChassis = new FieldlineViewChassis(this, i, numSensorsPerChassis);
         acqSystemRackLayout->insertWidget(i, pChassis);
         m_pAcqSystem.push_back(pChassis);
     }
 }
-
-
-// void FieldlineView::initAcqSystem()
-// {
-//    QVBoxLayout* rackFrameLayout = qobject_cast<QVBoxLayout*>(m_pUi->fieldlineRackFrame->layout());
-//    for (int i = 0; i < numChassis; i++)
-//    {
-//      FieldlineChassis* chassis = new FieldlineViewChassis(chans[i]);
-//      rackFrameLayout->addWidget(chassis);
-//    }
-// }
-
-void FieldlineView::startAllSensors() {
-    printLog("startAllSensors");
-    // m_pFieldlinePlugin->m_pAcqSystem->callFunctionAsync("callback", "start");
-//    m_pFieldlinePlugin->m_pAcqSystem->startADC();
-}
-
-void FieldlineView::stopAllSensors() {
-    printLog("stopAllSensors");
-    // m_pFieldlinePlugin->m_pAcqSystem->callFunctionAsync("callback", "stop");
-    m_pFieldlinePlugin->m_pAcqSystem->stopADC();
-}
-
-void FieldlineView::autoTuneAllSensors() {
-    printLog("autoTuneAllSensors");
-    //m_pFieldlinePlugin->m_pAcqSystem->setCallback();
-}
-
-void FieldlineView::restartAllSensors() {
-    printLog("restartAllSensors");
-    std::thread t([this]{
-                    m_pFieldlinePlugin->m_pAcqSystem->restartAllSensors();
-                });
-    t.detach();
-}
-
-void FieldlineView::coarseZeroAllSensors() {
-    printLog("coarseZeroAllSensors");
-    std::thread t([this]{
-                    m_pFieldlinePlugin->m_pAcqSystem->coarseZeroAllSensors();
-                });
-    t.detach();
-}
-
-void FieldlineView::fineZeroAllSensors() {
-    printLog("fineZeroAllSensors");
-    std::thread t([this]{
-                    m_pFieldlinePlugin->m_pAcqSystem->fineZeroAllSensors();
-                });
-    t.detach();
-}
-
-
-//void FieldlineView::setChannelState(size_t chassis_i, size_t chan_i)
-//{
-//}
-
-//statish FieldlineView::getChannelState(size_t chassis_i, size_t chan_i)
-//{
-//}
-
-//statish FieldlineView::setAllChannelState(size_t chassis_i, statish)
-//{
-//}
-
-}  // namespace FIELDLINEPLUGIN
-
-//
-// //=============================================================================================================
-//
-//
-// void FieldlineView::clear()
-// {
-//     for(auto* c : chassis){
-//         ui->frame->layout()->removeWidget(c);
-//         c->deleteLater();
-//     }
-// };
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setColor(size_t chassis_id, size_t chan_num, const QColor& color)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setColor(chan_num, color);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setColor(size_t chassis_id, size_t chan_num, const QColor& color, bool blinking)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setColor(chan_num, color, blinking);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setChassisColor(size_t chassis_id, const QColor& color)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setColor(color);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setChassisColor(size_t chassis_id, const QColor& color, bool blinking)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setColor(color, blinking);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setAllColor(const QColor& color)
-// {
-//     for(auto* c : chassis){
-//         c->setColor(color);
-//     }
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setAllColor(const QColor& color, bool blinking)
-// {
-//     for(auto* c : chassis){
-//         c->setColor(color, blinking);
-//     }
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setBlinkState(size_t chassis_id, size_t chan_num, bool blinking)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setBlinkState(chan_num, blinking);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setChassisBlinkState(size_t chassis_id, bool blinking)
-// {
-//     if(chassis_id >= chassis.size()){
-//         return;
-//     }
-//     chassis.at(chassis_id)->setBlinkState(blinking);
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setAllBlinkState(bool blinking)
-// {
-//     for(auto* c : chassis){
-//         c->setBlinkState(blinking);
-//     }
-// }
-//
-// //=============================================================================================================
-//
-// void FieldlineView::setDefaultNumchans(int num_chans)
-// {
-//     default_num_chans = num_chans;
-// }

@@ -38,6 +38,8 @@
 
 namespace FIELDLINEPLUGIN {
 
+constexpr int defaultNumSensorsPerChassis = 16;
+
 enum class FieldlineDataType {
     DATA_BZ = 0,
     DATA_BY = 1,
