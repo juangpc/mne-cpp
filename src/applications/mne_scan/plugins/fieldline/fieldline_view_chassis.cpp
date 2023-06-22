@@ -72,7 +72,9 @@
 // DEFINE MEMBER METHODS
 //=============================================================================================================
 
-namespace FIELDLINEPLUGIN {
+using FIELDLINEPLUGIN::FieldlineView;
+using FIELDLINEPLUGIN::FieldlineViewChassis;
+using FIELDLINEPLUGIN::FieldlineViewSensor;
 
 //=============================================================================================================
 
@@ -135,11 +137,23 @@ void FieldlineViewChassis::createSensors()
   QHBoxLayout* sensorLayout = qobject_cast<QHBoxLayout*>(m_pUi->sensorFrame->layout());
   for (int i = 0; i < numSensors; i++) {
     FieldlineViewSensor* pSensor = new FieldlineViewSensor(this, i);
+    connectSensor(pSensor, i);
     sensorLayout->insertWidget(i, pSensor);
     m_pSensors.push_back(pSensor);
   }
 }
 
+//=============================================================================================================
+
+void FieldlineViewChassis::connectSensor(FieldlineViewSensor *sensor, int index)
+{
+    connect(sensor, &FieldlineViewSensor::restart, [this, index](){emit restartSensor(index);});
+    connect(sensor, &FieldlineViewSensor::coarseZero, [this, index](){emit coarseZeroSensor(index);});
+    connect(sensor, &FieldlineViewSensor::fineZero, [this, index](){emit fineZeroSensor(index);});
+
+    connect(sensor, &FieldlineViewSensor::enable, [this, index](){emit restartSensor(index);});
+    connect(sensor, &FieldlineViewSensor::disable, [this, index](){emit restartSensor(index);});
+}
 
 //=============================================================================================================
 
@@ -147,6 +161,3 @@ void FieldlineViewChassis::setActive()
 {
   chassisActive.store(true);
 }
-
-}  // namespace FIELDLINEPLUGIN
-

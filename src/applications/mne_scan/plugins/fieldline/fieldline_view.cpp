@@ -80,7 +80,7 @@ FieldlineView::FieldlineView(Fieldline *parent)
 {
     m_pUi->setupUi(this);
     initTopMenu();
-    initAcqSystem(2);
+    initChassisView(2);
 //    hideChassisView();
     connect(this, &FieldlineView::updateMacIpTable,
             this, &FieldlineView::updateMacIpTableItem);
@@ -98,7 +98,7 @@ FieldlineView::~FieldlineView()
 void FieldlineView::setChassisConfiguration(int num_chassis, int num_sensors_per_chassis)
 {
     (void)num_sensors_per_chassis; //just until done refactoring chassis
-    initAcqSystem(num_chassis);
+    initChassisView(num_chassis);
 }
 
 //=============================================================================================================
@@ -218,14 +218,14 @@ void FieldlineView::initAcqSystemTopButtons()
 
 //=============================================================================================================
 
-void FieldlineView::initAcqSystem(int numChassis)
+void FieldlineView::initChassisView(int numChassis)
 {
-    initAcqSystem(numChassis, defaultNumSensorsPerChassis);
+    initChassisView(numChassis, defaultNumSensorsPerChassis);
 }
 
 //=============================================================================================================
 
-void FieldlineView::initAcqSystem(int numChassis, int numSensorsPerChassis)
+void FieldlineView::initChassisView(int numChassis, int numSensorsPerChassis)
 {
     initAcqSystemTopButtons();
     QVBoxLayout* acqSystemRackLayout = qobject_cast<QVBoxLayout*>(m_pUi->chassisRackFrame->layout());

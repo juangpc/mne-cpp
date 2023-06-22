@@ -78,15 +78,26 @@ class FieldlineViewChassis : public QWidget
 {
     Q_OBJECT
 
- public:
+public:
     explicit FieldlineViewChassis(FieldlineView *parent, int num);
     explicit FieldlineViewChassis(FieldlineView *parent, int num, int numSensors);
     ~FieldlineViewChassis();
     void setActive();
 
- private:
+signals:
+    void restartSensor(int sensor);
+    void coarseZeroSensor(int sensor);
+    void fineZeroSensor(int sensor);
+
+    void enableSensor(int sensor);
+    void disableSensor(int sensor);
+
+private:
     void createSensors();
     void updateSensorLeds();
+
+    void connectSensor(FieldlineViewSensor* sensor, int index);
+
     FieldlineView *m_pFieldlineView;
     Ui::uiFieldlineViewChassis* m_pUi;
     std::vector<FieldlineViewSensor*> m_pSensors;

@@ -109,8 +109,8 @@ public:
     void saveSensorStateReport();
 
  private:
-    void initAcqSystem(int numChassis);
-    void initAcqSystem(int numChassis, int numSensorsPerChassis);
+    void initChassisView(int numChassis);
+    void initChassisView(int numChassis, int numSensorsPerChassis);
 
     void initTopMenu();
     void hideChassisView();
