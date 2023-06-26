@@ -102,7 +102,7 @@ public:
     void coarseZeroAllSensors();
     void fineZeroAllSensors();
 
-    void restartZeroSensor(int chassis_index, int sensor_index);
+    void restartSensor(int chassis_index, int sensor_index);
     void coarseZeroSensor(int chassis_index, int sensor_index);
     void fineZeroSensor(int chassis_index, int sensor_index);
 

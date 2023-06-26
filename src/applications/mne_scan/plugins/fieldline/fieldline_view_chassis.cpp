@@ -161,3 +161,10 @@ void FieldlineViewChassis::setActive()
 {
   chassisActive.store(true);
 }
+
+//=============================================================================================================
+
+void FieldlineViewChassis::setSensorState(int sensor, FieldlineSensorStatusType state)
+{
+    m_pSensors[sensor]->setState(state);
+}

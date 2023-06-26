@@ -45,6 +45,8 @@
 #include <mutex>
 #include <atomic>
 
+#include "fieldline/fieldline_definitions.h"
+
 //=============================================================================================================
 // QT INCLUDES
 //=============================================================================================================
@@ -83,6 +85,8 @@ public:
     explicit FieldlineViewChassis(FieldlineView *parent, int num, int numSensors);
     ~FieldlineViewChassis();
     void setActive();
+
+    void setSensorState(int sensor, FieldlineSensorStatusType state);
 
 signals:
     void restartSensor(int sensor);

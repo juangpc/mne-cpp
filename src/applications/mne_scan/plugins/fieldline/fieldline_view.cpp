@@ -97,15 +97,14 @@ FieldlineView::~FieldlineView()
 
 void FieldlineView::setChassisConfiguration(int num_chassis, int num_sensors_per_chassis)
 {
-    (void)num_sensors_per_chassis; //just until done refactoring chassis
-    initChassisView(num_chassis);
+    initChassisView(num_chassis, num_sensors_per_chassis);
 }
 
 //=============================================================================================================
 
 void FieldlineView::setSensorState(int chassis_id, int sensor_id, FieldlineSensorStatusType state)
 {
-    m_pAcqSystem[chassis_id];
+    m_pAcqSystem[chassis_id]->setSensorState(sensor_id, state);
 }
 
 //=============================================================================================================
@@ -231,6 +230,10 @@ void FieldlineView::initChassisView(int numChassis, int numSensorsPerChassis)
     QVBoxLayout* acqSystemRackLayout = qobject_cast<QVBoxLayout*>(m_pUi->chassisRackFrame->layout());
     for (int i = 0; i < numChassis; i++) {
         FieldlineViewChassis* pChassis = new FieldlineViewChassis(this, i, numSensorsPerChassis);
+        connect(pChassis, &FieldlineViewChassis::restartSensor, [this, i](int sensor){emit restartSensor(i, sensor);});
+        connect(pChassis, &FieldlineViewChassis::coarseZeroSensor, [this, i](int sensor){emit coarseZeroSensor(i, sensor);});
+        connect(pChassis, &FieldlineViewChassis::fineZeroSensor, [this, i](int sensor){emit fineZeroSensor(i, sensor);});
+
         acqSystemRackLayout->insertWidget(i, pChassis);
         m_pAcqSystem.push_back(pChassis);
     }
