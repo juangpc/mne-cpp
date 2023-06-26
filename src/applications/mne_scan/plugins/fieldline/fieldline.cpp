@@ -132,127 +132,201 @@ namespace FIELDLINEPLUGIN {
 
 Fieldline::Fieldline()
 : m_pAcqSystem(nullptr)
-, m_pFiffInfo(QSharedPointer<FIFFLIB::FiffInfo>(new FIFFLIB::FiffInfo()))
 {
+    qDebug() << "Hello";
 }
 
 //=============================================================================================================
 
 Fieldline::~Fieldline() {
-  if (this->isRunning()) {
-    this->stop();
-  }
+    if (this->isRunning()) {
+        this->stop();
+    }
 }
 
 //=============================================================================================================
 
 QSharedPointer<SCSHAREDLIB::AbstractPlugin> Fieldline::clone() const
 {
-  QSharedPointer<SCSHAREDLIB::AbstractPlugin> pFieldlineClone(new Fieldline());
-  return pFieldlineClone;
+    QSharedPointer<SCSHAREDLIB::AbstractPlugin> pFieldlineClone(new Fieldline());
+    return pFieldlineClone;
 }
 
 //=============================================================================================================
 
 void Fieldline::init()
 {
-  printLog("Fieldline init");
-  m_pCircularBuffer = QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double>::create(40);
-  m_pRTMSA = SCSHAREDLIB::PluginOutputData
-    <SCMEASLIB::RealTimeMultiSampleArray>::create(this, "Fieldline Plugin",
-                                                  "FieldlinePlguin output");
-  m_pRTMSA->measurementData()->setName(this->getName());
-  m_outputConnectors.append(m_pRTMSA);
+    printLog("Fieldline init");
+    m_pCircularBuffer = QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double>::create(40);
+    m_pRTMSA = SCSHAREDLIB::PluginOutputData
+            <SCMEASLIB::RealTimeMultiSampleArray>::create(this, "Fieldline Plugin",
+                                                          "FieldlinePlguin output");
+    m_pRTMSA->measurementData()->setName(this->getName());
+    m_outputConnectors.append(m_pRTMSA);
 
-  m_pAcqSystem = new FieldlineAcqSystem();
+    m_pAcqSystem = new FieldlineAcqSystem();
 }
 
 //=============================================================================================================
 
 void Fieldline::unload() {
-  printLog("unload");
-  delete m_pAcqSystem;
+    printLog("unload");
+    delete m_pAcqSystem;
 }
 
 //=============================================================================================================
 
 bool Fieldline::start()
 {
-  printLog("start Fieldline");
+    printLog("start Fieldline");
 
-  initFiffInfo();
+    initFiffInfo();
 
-  std::thread t([this]{
-                  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                  m_pAcqSystem->startADC();
-              });
-  t.detach();
+    std::thread t([this]{
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        m_pAcqSystem->startADC();
+    });
+    t.detach();
 
-  QThread::start();
-  return true;
+    QThread::start();
+    return true;
 }
+
+//=============================================================================================================
+
+FieldlineView* Fieldline::createView()
+{
+    auto* view = new FieldlineView(this);
+
+    connect(view, &FieldlineView::connectToAcqSys, this, &Fieldline::connectToAcq);
+
+    connect(view, &FieldlineView::restartSensor, this, &Fieldline::restartSensor);
+    connect(view, &FieldlineView::coarseZeroSensor, this, &Fieldline::coarseZeroSensor);
+    connect(view, &FieldlineView::fineZeroSensor, this, &Fieldline::fineZeroSensor);
+
+    connect(view, &FieldlineView::restartAllSensors, this, &Fieldline::restartAllSensors);
+    connect(view, &FieldlineView::coarseZeroAllSensors, this, &Fieldline::coarseZeroAllSensors);
+    connect(view, &FieldlineView::fineZeroAllSensors, this, &Fieldline::fineZeroAllSensors);
+
+    return view;
+}
+
+//=============================================================================================================
+
+void connectToAcq()
+{
+
+}
+
+//=============================================================================================================
+
+void Fieldline::restartAllSensors()
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
+
+void Fieldline::coarseZeroAllSensors()
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
+
+void Fieldline::fineZeroAllSensors()
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
+
+void Fieldline::restartSensor(int chassis, int sensor)
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
+
+void Fieldline::coarseZeroSensor(int chassis, int sensor)
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
+
+void Fieldline::fineZeroSensor(int chassis, int sensor)
+{
+    //Insert logic to send command to python here.
+}
+
+//=============================================================================================================
 
 void Fieldline::initFiffInfo()
+{   
+    m_pFiffInfo->sfreq = 1000.0f;
+    m_pFiffInfo->nchan = 3;
+    m_pFiffInfo->chs.clear();
+    for (int chan_i = 0; chan_i < m_pFiffInfo->nchan; chan_i++) {
+        FIFFLIB::FiffChInfo channel;
+        channel.kind = FIFFV_MEG_CH;
+        channel.unit = FIFF_UNIT_T;
+        channel.unit_mul = FIFF_UNITM_NONE;
+        channel.chpos.coil_type = FIFFV_COIL_NONE;
+        std::string channel_name(std::string("Ch. ") + std::to_string(chan_i));
+        channel.ch_name = QString::fromStdString(channel_name);
+        m_pFiffInfo->chs.append(channel);
+        m_pFiffInfo->ch_names.append(QString::fromStdString(channel_name));
+    }
+
+    m_pRTMSA->measurementData()->initFromFiffInfo(m_pFiffInfo);
+    m_pRTMSA->measurementData()->setMultiArraySize(1);
+    m_pRTMSA->measurementData()->setVisibility(true);
+}
+
+//=============================================================================================================
+
+bool Fieldline::stop()
 {
-  m_pFiffInfo->sfreq = 1000.0f;
-  m_pFiffInfo->nchan = 3;
-  m_pFiffInfo->chs.clear();
-  for (int chan_i = 0; chan_i < m_pFiffInfo->nchan; chan_i++) {
-    FIFFLIB::FiffChInfo channel;
-    channel.kind = FIFFV_MEG_CH;
-    channel.unit = FIFF_UNIT_T;
-    channel.unit_mul = FIFF_UNITM_NONE;
-    channel.chpos.coil_type = FIFFV_COIL_NONE;
-    std::string channel_name(std::string("Ch. ") + std::to_string(chan_i));
-    channel.ch_name = QString::fromStdString(channel_name);
-    m_pFiffInfo->chs.append(channel);
-    m_pFiffInfo->ch_names.append(QString::fromStdString(channel_name));
-  }
+    printLog("stop");
 
-  m_pRTMSA->measurementData()->initFromFiffInfo(m_pFiffInfo);
-  m_pRTMSA->measurementData()->setMultiArraySize(1);
-  m_pRTMSA->measurementData()->setVisibility(true);
+    m_pAcqSystem->stopADC();
+
+    requestInterruption();
+    wait(500);
+
+    m_pRTMSA->measurementData()->clear();
+    m_pCircularBuffer->clear();
+
+    return true;
 }
 
 //=============================================================================================================
 
-bool Fieldline::stop() {
-  printLog("stop");
-
-  m_pAcqSystem->stopADC();
-
-  requestInterruption();
-  wait(500);
-
-  m_pRTMSA->measurementData()->clear();
-  m_pCircularBuffer->clear();
-
-  return true;
-}
-
-//=============================================================================================================
-
-SCSHAREDLIB::AbstractPlugin::PluginType Fieldline::getType() const {
-  printLog("getType Fieldline");
-  return SCSHAREDLIB::AbstractPlugin::PluginType::_ISensor;
+SCSHAREDLIB::AbstractPlugin::PluginType Fieldline::getType() const
+{
+    printLog("getType Fieldline");
+    return SCSHAREDLIB::AbstractPlugin::PluginType::_ISensor;
 }
 
 //=============================================================================================================
 
 QString Fieldline::getName() const {
-  return QString("Fieldline OPM");
+    return QString("Fieldline OPM");
 }
 
 //=============================================================================================================
 
-QWidget *Fieldline::setupWidget() {
-  return new FieldlineView(this);
+QWidget *Fieldline::setupWidget()
+{
+    return createView();
 }
 
 //=============================================================================================================
 
 void Fieldline::findIpAsync(std::vector<std::string>& macList,
-                            std::function<void(std::vector<std::string>&)> callback) {
+                            std::function<void(std::vector<std::string>&)> callback)
+{
     std::thread ipFinder([macList, callback] {
         IPFINDER::IpFinder ipFinder;
         for (auto& mac : macList) {
@@ -266,33 +340,34 @@ void Fieldline::findIpAsync(std::vector<std::string>& macList,
         }
         callback(ipList);
     });
-  ipFinder.detach();
+    ipFinder.detach();
 }
 
 //=============================================================================================================
 
 void Fieldline::run()
 {
-  // Eigen::MatrixXd matData;
-  // matData.resize(m_pFiffInfo->nchan, 200);
-  //
-  // while (!isInterruptionRequested()) {
-  //   if (m_pCircularBuffer->pop(matData)) {
-  //     if (!isInterruptionRequested()) {
-  //       // matData = Eigen::MatrixXd::Random(m_pFiffInfo->nchan, 200);
-  //       matData *= 4e-12;
-  //       // msleep(200);
-  //       m_pRTMSA->measurementData()->setValue(matData);
-  //     }
-  //   }
-  // }
+    // Eigen::MatrixXd matData;
+    // matData.resize(m_pFiffInfo->nchan, 200);
+    //
+    // while (!isInterruptionRequested()) {
+    //   if (m_pCircularBuffer->pop(matData)) {
+    //     if (!isInterruptionRequested()) {
+    //       // matData = Eigen::MatrixXd::Random(m_pFiffInfo->nchan, 200);
+    //       matData *= 4e-12;
+    //       // msleep(200);
+    //       m_pRTMSA->measurementData()->setValue(matData);
+    //     }
+    //   }
+    // }
 }
 
 //=============================================================================================================
 
-QString Fieldline::getBuildInfo() {
-  printLog("getBuildInfo Fieldline");
-  return QString(buildDateTime()) + QString(" - ") + QString(buildHash());
+QString Fieldline::getBuildInfo()
+{
+    printLog("getBuildInfo Fieldline");
+    return QString(buildDateTime()) + QString(" - ") + QString(buildHash());
 }
 
 //=============================================================================================================

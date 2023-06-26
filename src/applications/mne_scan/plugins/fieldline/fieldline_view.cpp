@@ -74,14 +74,13 @@ using FIELDLINEPLUGIN::FieldlineSensorStatusType;
 
 //=============================================================================================================
 
-FieldlineView::FieldlineView(Fieldline *parent)
-: m_pFieldlinePlugin(parent),
-  m_pUi(new Ui::uiFieldlineView)
+FieldlineView::FieldlineView(Fieldline* parent)
+: m_pFieldlinePlugin(parent)
+, m_pUi(new Ui::uiFieldlineView)
 {
     m_pUi->setupUi(this);
     initTopMenu();
-    initChassisView(2);
-//    hideChassisView();
+    hideChassisView();
     connect(this, &FieldlineView::updateMacIpTable,
             this, &FieldlineView::updateMacIpTableItem);
 }
@@ -91,13 +90,6 @@ FieldlineView::FieldlineView(Fieldline *parent)
 FieldlineView::~FieldlineView()
 {
     delete m_pUi;
-}
-
-//=============================================================================================================
-
-void FieldlineView::setChassisConfiguration(int num_chassis, int num_sensors_per_chassis)
-{
-    initChassisView(num_chassis, num_sensors_per_chassis);
 }
 
 //=============================================================================================================
@@ -237,4 +229,21 @@ void FieldlineView::initChassisView(int numChassis, int numSensorsPerChassis)
         acqSystemRackLayout->insertWidget(i, pChassis);
         m_pAcqSystem.push_back(pChassis);
     }
+
+    showChassisView();
 }
+
+//=============================================================================================================
+
+void FieldlineView::setViewMode(ViewMode mode)
+{
+    switch (mode){
+    case All:
+        m_pUi->topMenuFrame->show();
+        break;
+    case ChassisOnly:
+        m_pUi->topMenuFrame->hide();
+        m_pUi->chassisRackFrame->show();
+    }
+}
+

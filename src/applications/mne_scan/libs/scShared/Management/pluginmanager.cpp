@@ -117,7 +117,6 @@ void PluginManager::loadPlugins(const QString& dir)
         // Exclude .exp and .lib files (only relevant for windows builds)
         if(!file.contains(".exp") && !file.contains(".lib")) {
             this->setFileName(PluginsDir.absoluteFilePath(file));
-            qDebug() << PluginsDir.absoluteFilePath(file);
             QObject *pPlugin = this->instance();
 
             // AbstractPlugin
@@ -134,11 +133,10 @@ void PluginManager::loadPlugins(const QString& dir)
 
                     if(pSensor) {
                         m_qVecSensorPlugins.push_back(pSensor);
-                        qInfo() << "[PluginManager::loadPlugins] Loading sensor plugin" << pSensor->getName() << "succeeded.";
-                        qInfo() << "[PluginManager::loadPlugins] Build Info:" << pSensor->getBuildInfo();
+                        qInfo() << "Sensor plugin" << pSensor->getName() << "succeeded. Build Timestamp:" << pSensor->getBuildInfo();
 
                     } else {
-                        qInfo() << "[PluginManager::loadPlugins] Loading sensor plugin failed.";
+                        qWarning() << "Loading sensor plugin from" << PluginsDir.absoluteFilePath(file) << "failed.";
                     }
                 } else if(pluginType == AbstractPlugin::_IAlgorithm) {
                     // AbstractAlgorithm
@@ -146,14 +144,15 @@ void PluginManager::loadPlugins(const QString& dir)
 
                     if(pAlgorithm) {
                         m_qVecAlgorithmPlugins.push_back(pAlgorithm);
-                        qInfo() << "[PluginManager::loadPlugins] Loading algorithm plugin" << pAlgorithm->getName() << "succeeded.";
-                        qInfo() << "[PluginManager::loadPlugins] Build Timestamp:" << pAlgorithm->getBuildInfo();
+                        qInfo() << "Algorithm plugin" << pAlgorithm->getName() << "loaded. Build Timestamp:" << pAlgorithm->getBuildInfo();
                     } else {
-                        qInfo() << "[PluginManager::loadPlugins] Loading algorithm plugin failed.";
+                        qWarning() << "Loading algorithm plugin from" << PluginsDir.absoluteFilePath(file) << "failed.";
                     }
                 }
 
                 emit pluginLoaded(msg);
+            } else {
+                qWarning() << "Unable to load" << PluginsDir.absoluteFilePath(file) << "as plugin.";
             }
         }
     }

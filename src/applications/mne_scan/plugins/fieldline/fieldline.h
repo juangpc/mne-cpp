@@ -88,45 +88,57 @@ class FIELDLINESHARED_EXPORT Fieldline : public SCSHAREDLIB::AbstractSensor
     Q_PLUGIN_METADATA(IID "scsharedlib/1.0" FILE "fieldline.json")
     Q_INTERFACES(SCSHAREDLIB::AbstractSensor)
 
- public:
-  //=========================================================================================================
-  // The plugin interface
-  Fieldline();
+public:
+    //=========================================================================================================
+    // The plugin interface
+    Fieldline();
 
-  ~Fieldline();
+    ~Fieldline();
 
-  virtual QSharedPointer<SCSHAREDLIB::AbstractPlugin> clone() const;
+    virtual QSharedPointer<SCSHAREDLIB::AbstractPlugin> clone() const override;
 
-  virtual void init();
+    virtual void init() override;
 
-  virtual void unload();
+    virtual void unload() override;
 
-  virtual bool start();
+    virtual bool start() override;
 
-  virtual bool stop();
+    virtual bool stop() override;
 
-  virtual AbstractPlugin::PluginType getType() const;
+    virtual AbstractPlugin::PluginType getType() const override;
 
-  virtual QString getName() const;
+    virtual QString getName() const override;
 
-  virtual QWidget* setupWidget();
+    virtual QWidget* setupWidget() override;
 
-  virtual QString getBuildInfo();
+    virtual QString getBuildInfo() override;
 
-  void findIpAsync(std::vector<std::string>& macList,
-                   std::function<void(std::vector<std::string>&)> callback);
-  FieldlineAcqSystem* m_pAcqSystem;
+    void findIpAsync(std::vector<std::string>& macList,
+                     std::function<void(std::vector<std::string>&)> callback);
+    FieldlineAcqSystem* m_pAcqSystem;
 
-  void newData(double* data, size_t numChannels, size_t numSamples);
+    void newData(double* data, size_t numChannels, size_t numSamples);
 
- protected:
-  virtual void run();
- private:
-  void initFiffInfo();
+protected:
+    virtual void run() override;
+private:
+    FieldlineView* createView();
 
-  QSharedPointer<SCSHAREDLIB::PluginOutputData<SCMEASLIB::RealTimeMultiSampleArray> >     m_pRTMSA;     /**< The RealTimeSampleArray to provide the EEG data.*/
-  QSharedPointer<FIFFLIB::FiffInfo> m_pFiffInfo;  /**< Fiff measurement info.*/
-  QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double> m_pCircularBuffer;  /**< Holds incoming raw data. */
+    void connectToAcq();
+
+    void restartAllSensors();
+    void coarseZeroAllSensors();
+    void fineZeroAllSensors();
+
+    void restartSensor(int chassis, int sensor);
+    void coarseZeroSensor(int chassis, int sensor);
+    void fineZeroSensor(int chassis, int sensor);
+
+    void initFiffInfo();
+
+    QSharedPointer<SCSHAREDLIB::PluginOutputData<SCMEASLIB::RealTimeMultiSampleArray> >     m_pRTMSA;     /**< The RealTimeSampleArray to provide the EEG data.*/
+    QSharedPointer<FIFFLIB::FiffInfo> m_pFiffInfo;  /**< Fiff measurement info.*/
+    QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double> m_pCircularBuffer;  /**< Holds incoming raw data. */
 };
 
 }  // namespace FIELDLINEPLUGIN

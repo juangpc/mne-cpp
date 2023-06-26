@@ -85,8 +85,16 @@ public:
     explicit FieldlineView(Fieldline* parent);
     ~FieldlineView();
 
-    void setChassisConfiguration(int num_chassis, int num_sensors_per_chassis);
     void setSensorState(int chassis_id, int sensor_id, FieldlineSensorStatusType state);
+    void initChassisView(int numChassis);
+    void initChassisView(int numChassis, int numSensorsPerChassis);
+
+    enum ViewMode{
+        All,
+        ChassisOnly
+    };
+
+    void setViewMode(ViewMode mode);
 
  signals:
     void updateMacIpTable(int row, int col, const QString& str);
@@ -109,16 +117,12 @@ public:
     void saveSensorStateReport();
 
  private:
-    void initChassisView(int numChassis);
-    void initChassisView(int numChassis, int numSensorsPerChassis);
-
     void initTopMenu();
     void hideChassisView();
     void showChassisView();
 
     void updateMacIpTableItem(int row, int col, const QString& str);
 
-    void initAcqSystemCallbacks();
     void initAcqSystemTopButtons();
     void setNumRowsIpMacFrame(int i);
 
