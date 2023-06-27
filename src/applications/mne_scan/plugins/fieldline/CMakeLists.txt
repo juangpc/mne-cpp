@@ -8,12 +8,9 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED
-    COMPONENTS Core Widgets Network Concurrent
-)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED
-    COMPONENTS Core Widgets Network Concurrent
-)
+set(QT_REQUIRED_COMPONENTS Core Widgets Network Concurrent)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS ${QT_REQUIRED_COMPONENTS})
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS ${QT_REQUIRED_COMPONENTS})
 
 set(HEADERS
     fieldline_global.h
@@ -44,49 +41,35 @@ set(UI_FILES
 
 set(FILE_TO_UPDATE fieldline_global.cpp)
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/fieldline.json)
-# message("File fieldline.json exists.")
-else()
-# message("File fieldline.json does not exist.")
-# message("Creating a new fieldline.json file.")
-execute_process(COMMAND "echo \"\""
-    WORKING_DIRECTORY ${CMAKE_C
-    OUTPUT_FILE fieldline.json
-)
-endif()
-
 set(SOURCE_PATHS ${SOURCES})
-
 list(TRANSFORM SOURCE_PATHS PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
-set_source_files_properties(${FILE_TO_UPDATE} PROPERTIES
-    OBJECT_DEPENDS "${SOURCE_PATHS}"
-)
+set_source_files_properties(${FILE_TO_UPDATE} PROPERTIES OBJECT_DEPENDS "${SOURCE_PATHS}")
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${UI_FILES})
 
 set(FFTW_LIBS "")
 
 if(USE_FFTW)
-if(WIN32)
+  if (WIN32)
     set(FFTW_LIBS
-        ${FFTW_DIR_LIBS}/libfftw3-3.dll
-        ${FFTW_DIR_LIBS}/libfftw3f-3.dll
-        ${FFTW_DIR_LIBS}/libfftwf3l-3.dll
+      ${FFTW_DIR_LIBS}/libfftw3-3.dll
+      ${FFTW_DIR_LIBS}/libfftw3f-3.dll
+      ${FFTW_DIR_LIBS}/libfftwf3l-3.dll
     )
     target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_DIR_INCLUDE})
-elseif(UNIX AND NOT APPLE)
+  elseif(UNIX AND NOT APPLE)
     set(FFTW_LIBS ${FFTW_DIR_LIBS}/lib/libfftw3.so)
     target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_DIR_INCLUDE}/api)
-endif()
+  endif()
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 
+set(QT_REQUIRED_COMPONENT_LIBS ${QT_REQUIRED_COMPONENTS})
+list(TRANSFORM QT_REQUIRED_COMPONENT_LIBS PREPEND "Qt${QT_VERSION_MAJOR}::")
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Network
-    Qt${QT_VERSION_MAJOR}::Concurrent
+    ${QT_REQUIRED_COMPONENT_LIBS}
     eigen
     mne_disp
     mne_utils
@@ -106,4 +89,3 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(NOT BUILD_SHARED_LIBS)
 target_compile_definitions(${PROJECT_NAME} PRIVATE STATICBUILD QT_STATICPLUGIN)
 endif()
-

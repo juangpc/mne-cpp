@@ -80,6 +80,7 @@ FieldlineView::FieldlineView(Fieldline* parent)
 {
     m_pUi->setupUi(this);
     initTopMenu();
+    initAcqSystemTopButtons();
     hideChassisView();
     connect(this, &FieldlineView::updateMacIpTable,
             this, &FieldlineView::updateMacIpTableItem);
@@ -123,9 +124,14 @@ void FieldlineView::initTopMenu()
     connect(m_pUi->findIPsBtn, &QPushButton::clicked,
                      this, &FieldlineView::findIps);
     connect(m_pUi->connectBtn, &QPushButton::clicked,
-                     this, &FieldlineView::connectToAcqSys);
+                     [this](){
+        QStringList l;
+        for (int i = 0; i < m_pMacIpTable->rowCount(); i++) {
+           l.append(m_pMacIpTable->item(i, 1)->text());
+        }
+        emit connectToAcqSys(l);});
     connect(m_pUi->disconnectBtn, &QPushButton::clicked,
-                     this, &FieldlineView::disconnectFromAcqSys);
+            [this](){clearChassisView();emit disconnectFromAcqSys();});
 }
 
 //=============================================================================================================
@@ -218,7 +224,6 @@ void FieldlineView::initChassisView(int numChassis)
 
 void FieldlineView::initChassisView(int numChassis, int numSensorsPerChassis)
 {
-    initAcqSystemTopButtons();
     QVBoxLayout* acqSystemRackLayout = qobject_cast<QVBoxLayout*>(m_pUi->chassisRackFrame->layout());
     for (int i = 0; i < numChassis; i++) {
         FieldlineViewChassis* pChassis = new FieldlineViewChassis(this, i, numSensorsPerChassis);
@@ -231,6 +236,20 @@ void FieldlineView::initChassisView(int numChassis, int numSensorsPerChassis)
     }
 
     showChassisView();
+}
+
+//=============================================================================================================
+
+void FieldlineView::clearChassisView()
+{
+    QLayout* acqSystemRackLayout = m_pUi->chassisRackFrame->layout();
+
+    for(auto* chassis : m_pAcqSystem){
+        acqSystemRackLayout->removeWidget(chassis);
+        chassis->deleteLater();
+    }
+
+    m_pAcqSystem.clear();
 }
 
 //=============================================================================================================

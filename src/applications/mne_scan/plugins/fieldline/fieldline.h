@@ -93,8 +93,6 @@ public:
     // The plugin interface
     Fieldline();
 
-    ~Fieldline();
-
     virtual QSharedPointer<SCSHAREDLIB::AbstractPlugin> clone() const override;
 
     virtual void init() override;
@@ -105,7 +103,7 @@ public:
 
     virtual bool stop() override;
 
-    virtual AbstractPlugin::PluginType getType() const override;
+    virtual PluginType getType() const override;
 
     virtual QString getName() const override;
 
@@ -119,12 +117,17 @@ public:
 
     void newData(double* data, size_t numChannels, size_t numSamples);
 
+signals:
+    void connectedToChassis(int numChassis, int numChannels);
+    void disconnectedFromChassis();
+
 protected:
     virtual void run() override;
 private:
     FieldlineView* createView();
 
-    void connectToAcq();
+    void connectToAcq(QStringList ips);
+    void disconnectFromAcq();
 
     void restartAllSensors();
     void coarseZeroAllSensors();
@@ -135,6 +138,8 @@ private:
     void fineZeroSensor(int chassis, int sensor);
 
     void initFiffInfo();
+
+    bool m_connected;
 
     QSharedPointer<SCSHAREDLIB::PluginOutputData<SCMEASLIB::RealTimeMultiSampleArray> >     m_pRTMSA;     /**< The RealTimeSampleArray to provide the EEG data.*/
     QSharedPointer<FIFFLIB::FiffInfo> m_pFiffInfo;  /**< Fiff measurement info.*/

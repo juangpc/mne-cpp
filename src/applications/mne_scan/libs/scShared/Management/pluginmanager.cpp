@@ -136,7 +136,7 @@ void PluginManager::loadPlugins(const QString& dir)
                         qInfo() << "Sensor plugin" << pSensor->getName() << "succeeded. Build Timestamp:" << pSensor->getBuildInfo();
 
                     } else {
-                        qWarning() << "Loading sensor plugin from" << PluginsDir.absoluteFilePath(file) << "failed.";
+                        qWarning() << "Loading sensor plugin from" << file << "failed.";
                     }
                 } else if(pluginType == AbstractPlugin::_IAlgorithm) {
                     // AbstractAlgorithm
@@ -152,7 +152,8 @@ void PluginManager::loadPlugins(const QString& dir)
 
                 emit pluginLoaded(msg);
             } else {
-                qWarning() << "Unable to load" << PluginsDir.absoluteFilePath(file) << "as plugin.";
+                qWarning() << "Unable to load" << file << "as plugin.";
+                qWarning() << errorString();
             }
         }
     }

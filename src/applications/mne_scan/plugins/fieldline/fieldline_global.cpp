@@ -52,9 +52,3 @@ const char* FIELDLINEPLUGIN::buildHash() { return UTILSLIB::gitHash();}
 //=============================================================================================================
 
 const char* FIELDLINEPLUGIN::buildHashLong() { return UTILSLIB::gitHashLong();}
-
-void FIELDLINEPLUGIN::printLog(const std::string& str) {
-  std::cout << str << "\n";
-  std::cout.flush();
-}
-

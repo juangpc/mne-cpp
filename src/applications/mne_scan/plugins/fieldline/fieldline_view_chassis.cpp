@@ -109,38 +109,38 @@ FieldlineViewChassis::FieldlineViewChassis(FieldlineView *parent, int num, int n
 FieldlineViewChassis::~FieldlineViewChassis()
 {
     // delete m_pUi;
-  chassisActive.store(false);
-  chassisRunning.store(false);
-  if (updateSensorLedThread.joinable()) {
-    updateSensorLedThread.join();
-  }
+    chassisActive.store(false);
+    chassisRunning.store(false);
+    if (updateSensorLedThread.joinable()) {
+        updateSensorLedThread.join();
+    }
 }
 
 //=============================================================================================================
 
 void FieldlineViewChassis::updateSensorLeds()
 {
-  while (chassisRunning.load()) {
-    while (chassisActive.load()) {
-      for (auto pSensor : m_pSensors) {
-        pSensor->updateLedState();
-      }
-      std::this_thread::sleep_for(sensorLedUpdateFreq);
+    while (chassisRunning.load()) {
+        while (chassisActive.load()) {
+            for (auto pSensor : m_pSensors) {
+                pSensor->updateLedState();
+            }
+            std::this_thread::sleep_for(sensorLedUpdateFreq);
+        }
     }
-  }
 }
 
 //=============================================================================================================
 
 void FieldlineViewChassis::createSensors()
 {
-  QHBoxLayout* sensorLayout = qobject_cast<QHBoxLayout*>(m_pUi->sensorFrame->layout());
-  for (int i = 0; i < numSensors; i++) {
-    FieldlineViewSensor* pSensor = new FieldlineViewSensor(this, i);
-    connectSensor(pSensor, i);
-    sensorLayout->insertWidget(i, pSensor);
-    m_pSensors.push_back(pSensor);
-  }
+    QHBoxLayout* sensorLayout = qobject_cast<QHBoxLayout*>(m_pUi->sensorFrame->layout());
+    for (int i = 0; i < numSensors; i++) {
+        FieldlineViewSensor* pSensor = new FieldlineViewSensor(this, i);
+        connectSensor(pSensor, i);
+        sensorLayout->insertWidget(i, pSensor);
+        m_pSensors.push_back(pSensor);
+    }
 }
 
 //=============================================================================================================
@@ -159,7 +159,7 @@ void FieldlineViewChassis::connectSensor(FieldlineViewSensor *sensor, int index)
 
 void FieldlineViewChassis::setActive()
 {
-  chassisActive.store(true);
+    chassisActive.store(true);
 }
 
 //=============================================================================================================

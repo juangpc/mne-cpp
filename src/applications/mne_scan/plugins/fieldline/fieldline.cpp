@@ -132,16 +132,9 @@ namespace FIELDLINEPLUGIN {
 
 Fieldline::Fieldline()
 : m_pAcqSystem(nullptr)
+, m_connected(false)
 {
-    qDebug() << "Hello";
-}
-
-//=============================================================================================================
-
-Fieldline::~Fieldline() {
-    if (this->isRunning()) {
-        this->stop();
-    }
+    qDebug() << "Hello Fieldline";
 }
 
 //=============================================================================================================
@@ -156,7 +149,6 @@ QSharedPointer<SCSHAREDLIB::AbstractPlugin> Fieldline::clone() const
 
 void Fieldline::init()
 {
-    printLog("Fieldline init");
     m_pCircularBuffer = QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double>::create(40);
     m_pRTMSA = SCSHAREDLIB::PluginOutputData
             <SCMEASLIB::RealTimeMultiSampleArray>::create(this, "Fieldline Plugin",
@@ -170,7 +162,6 @@ void Fieldline::init()
 //=============================================================================================================
 
 void Fieldline::unload() {
-    printLog("unload");
     delete m_pAcqSystem;
 }
 
@@ -178,8 +169,6 @@ void Fieldline::unload() {
 
 bool Fieldline::start()
 {
-    printLog("start Fieldline");
-
     initFiffInfo();
 
     std::thread t([this]{
@@ -199,6 +188,7 @@ FieldlineView* Fieldline::createView()
     auto* view = new FieldlineView(this);
 
     connect(view, &FieldlineView::connectToAcqSys, this, &Fieldline::connectToAcq);
+    connect(view, &FieldlineView::disconnectFromAcqSys, this, &Fieldline::disconnectFromAcq);
 
     connect(view, &FieldlineView::restartSensor, this, &Fieldline::restartSensor);
     connect(view, &FieldlineView::coarseZeroSensor, this, &Fieldline::coarseZeroSensor);
@@ -208,14 +198,31 @@ FieldlineView* Fieldline::createView()
     connect(view, &FieldlineView::coarseZeroAllSensors, this, &Fieldline::coarseZeroAllSensors);
     connect(view, &FieldlineView::fineZeroAllSensors, this, &Fieldline::fineZeroAllSensors);
 
+    connect(this, &Fieldline::connectedToChassis, view, QOverload<int,int>::of(&FieldlineView::initChassisView));
+    connect(this, &Fieldline::disconnectedFromChassis, view, &FieldlineView::clearChassisView);
+
     return view;
 }
 
 //=============================================================================================================
 
-void connectToAcq()
+void Fieldline::connectToAcq(QStringList ips)
 {
+    if(!m_connected && ips.size() > 0){
+        qDebug() << "Let's pretend we'e connecting to available chassis.";
+        emit connectedToChassis(ips.size(), 16);
+        m_connected = true;
+    }
+}
 
+//=============================================================================================================
+
+void Fieldline::disconnectFromAcq()
+{
+    if(m_connected){
+        emit disconnectedFromChassis();
+        m_connected = false;
+    }
 }
 
 //=============================================================================================================
@@ -288,8 +295,6 @@ void Fieldline::initFiffInfo()
 
 bool Fieldline::stop()
 {
-    printLog("stop");
-
     m_pAcqSystem->stopADC();
 
     requestInterruption();
@@ -305,7 +310,6 @@ bool Fieldline::stop()
 
 SCSHAREDLIB::AbstractPlugin::PluginType Fieldline::getType() const
 {
-    printLog("getType Fieldline");
     return SCSHAREDLIB::AbstractPlugin::PluginType::_ISensor;
 }
 
@@ -366,7 +370,6 @@ void Fieldline::run()
 
 QString Fieldline::getBuildInfo()
 {
-    printLog("getBuildInfo Fieldline");
     return QString(buildDateTime()) + QString(" - ") + QString(buildHash());
 }
 
@@ -384,7 +387,6 @@ void Fieldline::newData(double* data, size_t numChannels, size_t numSamples)
     m_pRTMSA->measurementData()->setValue(matData);
     //
     // while (!m_pCircularBuffer->push(matData)) {
-    //     printLog("Fieldline Plugin: Pushing data to circular buffer failed... Trying again.");
     // }
 }
 

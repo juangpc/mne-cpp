@@ -40,9 +40,6 @@
 // INCLUDES
 //=============================================================================================================
 
-#include <string>
-#include <iostream>
-
 #include <utils/buildinfo.h>
 
 //=============================================================================================================
@@ -54,8 +51,10 @@
 //=============================================================================================================
 // PREPROCESSOR DEFINES
 //=============================================================================================================
-
-#if defined(SCAN_FIELDLINE_PLUGIN)
+#if defined(STATICBUILD)
+#define
+#   define FIELDLINESHARED_EXPORT
+#elif defined(SCAN_FIELDLINE_PLUGIN)
 #  define FIELDLINESHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define FIELDLINESHARED_EXPORT Q_DECL_IMPORT
@@ -81,10 +80,6 @@ FIELDLINESHARED_EXPORT const char* buildHash();
  */
 FIELDLINESHARED_EXPORT const char* buildHashLong();
 
-void printLog(const std::string& str);
-
 }  // namespace FIELDLINEPLUGIN
-
-
 
 #endif  // FIELDLINE_GLOBAL_H

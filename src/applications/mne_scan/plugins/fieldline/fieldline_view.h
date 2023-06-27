@@ -89,6 +89,8 @@ public:
     void initChassisView(int numChassis);
     void initChassisView(int numChassis, int numSensorsPerChassis);
 
+    void clearChassisView();
+
     enum ViewMode{
         All,
         ChassisOnly
@@ -99,7 +101,7 @@ public:
  signals:
     void updateMacIpTable(int row, int col, const QString& str);
 
-    void connectToAcqSys();
+    void connectToAcqSys(QStringList ips);
     void disconnectFromAcqSys();
 
     void startAllSensors();
