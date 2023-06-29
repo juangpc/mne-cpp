@@ -42,6 +42,8 @@
 
 #include "fieldline/fieldline_global.h"
 
+#include "fieldline_definitions.h"
+
 #include <fiff/fiff.h>
 #include <fiff/fiff_info.h>
 #include <utils/generics/circularbuffer.h>
@@ -89,33 +91,26 @@ class FIELDLINESHARED_EXPORT Fieldline : public SCSHAREDLIB::AbstractSensor
     Q_INTERFACES(SCSHAREDLIB::AbstractSensor)
 
 public:
-    //=========================================================================================================
-    // The plugin interface
     Fieldline();
 
+    //=========================================================================================================
+    // AbstractSensor virtual methods
     virtual QSharedPointer<SCSHAREDLIB::AbstractPlugin> clone() const override;
-
     virtual void init() override;
-
     virtual void unload() override;
-
     virtual bool start() override;
-
     virtual bool stop() override;
-
     virtual PluginType getType() const override;
-
     virtual QString getName() const override;
-
     virtual QWidget* setupWidget() override;
-
     virtual QString getBuildInfo() override;
 
     void findIpAsync(std::vector<std::string>& macList,
                      std::function<void(std::vector<std::string>&)> callback);
-    FieldlineAcqSystem* m_pAcqSystem;
 
     void newData(double* data, size_t numChannels, size_t numSamples);
+
+    void updateSensorState(int chassis, int sensor, FieldlineSensorStatusType state);
 
 signals:
     void connectedToChassis(int numChassis, int numChannels);
@@ -123,6 +118,7 @@ signals:
 
 protected:
     virtual void run() override;
+
 private:
     FieldlineView* createView();
 
@@ -139,9 +135,13 @@ private:
 
     void initFiffInfo();
 
+    FieldlineAcqSystem* m_pAcqSystem;
+
     bool m_connected;
 
-    QSharedPointer<SCSHAREDLIB::PluginOutputData<SCMEASLIB::RealTimeMultiSampleArray> >     m_pRTMSA;     /**< The RealTimeSampleArray to provide the EEG data.*/
+    std::vector<std::vector<FieldlineSensorStatusType> > m_sensorStatus;
+
+    QSharedPointer<SCSHAREDLIB::PluginOutputData<SCMEASLIB::RealTimeMultiSampleArray> >  m_pRTMSA;     /**< The RealTimeSampleArray to provide the EEG data.*/
     QSharedPointer<FIFFLIB::FiffInfo> m_pFiffInfo;  /**< Fiff measurement info.*/
     QSharedPointer<UTILSLIB::CircularBuffer_Matrix_double> m_pCircularBuffer;  /**< Holds incoming raw data. */
 };

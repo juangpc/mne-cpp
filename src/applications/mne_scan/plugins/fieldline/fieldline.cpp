@@ -210,6 +210,24 @@ void Fieldline::connectToAcq(QStringList ips)
 {
     if(!m_connected && ips.size() > 0){
         qDebug() << "Let's pretend we'e connecting to available chassis.";
+        //Add connection logic here
+
+        //This needs to be obtained properly from the acq system.
+        const int num_sensors = 16;
+        auto default_sensor_state = FieldlineSensorStatusType::SENSOR_OFF;
+
+        m_sensorStatus.clear();
+        m_sensorStatus.reserve(ips.size());
+        for(auto& ip : ips){
+            (void)ip;
+            std::vector<FieldlineSensorStatusType> vec;
+            vec.reserve(num_sensors);
+            for(int i = 0; i < num_sensors; ++i){
+                vec.push_back(default_sensor_state);
+            }
+            m_sensorStatus.push_back(std::move(vec));
+        }
+
         emit connectedToChassis(ips.size(), 16);
         m_connected = true;
     }
