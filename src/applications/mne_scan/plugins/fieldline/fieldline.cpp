@@ -56,7 +56,10 @@
 //=============================================================================================================
 // QT INCLUDES
 //=============================================================================================================
+
 #include <QLabel>
+#include <QFileDialog>
+#include <QMessageBox>
 
 //=============================================================================================================
 // EIGEN INCLUDES
@@ -198,6 +201,8 @@ FieldlineView* Fieldline::createView()
     connect(view, &FieldlineView::coarseZeroAllSensors, this, &Fieldline::coarseZeroAllSensors);
     connect(view, &FieldlineView::fineZeroAllSensors, this, &Fieldline::fineZeroAllSensors);
 
+    connect(view, &FieldlineView::saveSensorStateReport, this, &Fieldline::saveSensorStateReport);
+
     connect(this, &Fieldline::connectedToChassis, view, QOverload<int,int>::of(&FieldlineView::initChassisView));
     connect(this, &Fieldline::disconnectedFromChassis, view, &FieldlineView::clearChassisView);
 
@@ -283,6 +288,45 @@ void Fieldline::coarseZeroSensor(int chassis, int sensor)
 void Fieldline::fineZeroSensor(int chassis, int sensor)
 {
     //Insert logic to send command to python here.
+}
+
+
+//=============================================================================================================
+
+void Fieldline::saveSensorStateReport()
+{
+    static QString save_dir = "";
+
+    auto saveFilePath = QFileDialog::getSaveFileName(nullptr,
+                                                     tr("Save Events"), save_dir,
+                                                     tr("Text File (*.txt)"));
+
+    if(saveFilePath.isEmpty()){
+        return;
+    }
+
+    QFile file(saveFilePath);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qWarning() << "[EventModel::saveToFile] Unable to access file.";
+        QMessageBox::warning(0, tr("MNE Scan - Fieldine OPM"), QString("Not able to access file ") + saveFilePath, QMessageBox::Ok);
+    }
+    QTextStream out(&file);
+
+    // Get values from acq system instead
+    QString fake_sensor_fields{"[00:01] x: -19.2 y: 12.6 z: 21.1"};
+    QString fake_sensor_cal{"[00:01] 1"};
+
+    out << "MNE Scan - Fieldline OPM - " << QDateTime::currentDateTime().toString() << "\n\n";
+
+    out << "Fields:\n";
+    out << fake_sensor_fields << "\n\n";
+
+    out << "Calibration:\n";
+    out << fake_sensor_cal;
+    out << "\n";
+
+    QFileInfo info(file);
+    save_dir = info.absoluteDir().absolutePath();
 }
 
 //=============================================================================================================

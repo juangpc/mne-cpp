@@ -133,6 +133,8 @@ private:
     void coarseZeroSensor(int chassis, int sensor);
     void fineZeroSensor(int chassis, int sensor);
 
+    void saveSensorStateReport();
+
     void initFiffInfo();
 
     FieldlineAcqSystem* m_pAcqSystem;
