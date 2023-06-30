@@ -3,7 +3,7 @@ project(fieldline_acqsystem LANGUAGES CXX)
 
 option(FIELDLINE_MOCK "Mock fieldline acq without linking to python" ON)
 
-set(HEADRES 
+set(HEADERS
     fieldline_acqsystem.h
 )
 
