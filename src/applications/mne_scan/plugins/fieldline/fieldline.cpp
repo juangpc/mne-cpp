@@ -60,6 +60,7 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDateTime>
 
 //=============================================================================================================
 // EIGEN INCLUDES
@@ -215,6 +216,7 @@ void Fieldline::connectToAcq(QStringList ips)
 {
     if(!m_connected && ips.size() > 0){
         qDebug() << "Let's pretend we'e connecting to available chassis.";
+        //std::cout.flush();
         //Add connection logic here
 
         //This needs to be obtained properly from the acq system.
